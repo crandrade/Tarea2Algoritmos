@@ -2,6 +2,9 @@ package Tarea2Algoritmos;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
@@ -28,16 +31,19 @@ public class Main {
 		System.gc();
 	}
 	
-	static public char[] generatePatron(boolean o, char[] text, int l){
-		char [] patron = new char[l];
+	static public String generateChain(boolean o, Structure struct, int l){
+		String patron = "";
+		int j = (int) Math.pow(2, 25);
 		if(o){
-			for(int i=0; i<l; i++){
-				patron[i] = (char) ThreadLocalRandom.current().nextInt(0,2);
-			}
+			patron = struct.obtain();
 		}
 		else{
-			int i = ThreadLocalRandom.current().nextInt(0, text.length-l+1);
-			patron = Arrays.copyOfRange(text, i, i+l);
+			String [] bases = {"G","C","A","T"};
+			String line="";
+			for(int k=0; k<15; k++){
+				line+="" + bases[ThreadLocalRandom.current().nextInt(0, 4)];
+			}
+			patron = line;
 		}
 		return patron;
 	}

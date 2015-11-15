@@ -76,26 +76,17 @@ public class Main {
 		Option power2 = new Option("I", "Log (Max lenght of patron)");
 		power2.setArgs(1);
 		power2.setRequired(true);
-		Option binary = new Option("b", "Binary input file");
-		binary.setArgs(0);
 		Option rDNA = new Option("rd", "Real DNA input file");
 		rDNA.setArgs(0);
 		Option fDNA = new Option("fd", "Fake DNA input file");
 		fDNA.setArgs(0);
-		Option rText = new Option("pt", "Real text input file");
-		rText.setArgs(0);
-		Option fText = new Option("ft", "Fake text input file");
-		fText.setArgs(0);
 	
 		Options options = new Options();
 		options.addOption(iter);
 		options.addOption(power);
 		options.addOption(power2);
-		options.addOption(binary);
 		options.addOption(rDNA);
 		options.addOption(fDNA);
-		options.addOption(rText);
-		options.addOption(fText);
 		
 		CommandLineParser parser = new BasicParser();
 		CommandLine cmd = null;
@@ -114,56 +105,56 @@ public class Main {
 		File fDir = new File(dir);
 		PrintWriter printer = new PrintWriter(new FileWriter(fDir,true));
 		
-		int l=2;
+		int l=20;
 		if (cmd.hasOption("i")) {
 			int nn = Integer.parseInt(cmd.getOptionValue(power.getOpt()));
-			if(nn>1 && nn<8)
+			if(nn>19 && nn<=25)
 			l=nn;
 		}
 		System.err.println(l);
-		int L=7;
+		int L=25;
 		if (cmd.hasOption("I")) {
 			int nn = Integer.parseInt(cmd.getOptionValue(power2.getOpt()));
-			if(nn>1 && nn<8 && nn>=l)
+			if(nn>=20 && nn<=25 && nn>=l)
 			L=nn;
 		}
 		System.err.println(L);
-		int max_it=50000;
+		int max_it=10000;
 		if (cmd.hasOption("iterations")) {
 			int nn = Integer.parseInt(cmd.getOptionValue(iter.getOpt()));
-			if(nn>100 && nn<100000)
+			if(nn>=100 && nn<=10000)
 			max_it=nn;
-		}		
+		}
 		boolean random = true;
 		boolean extracted = false;
 		long t=0;
-		SummaryStatistics BFsum;
-		SummaryStatistics BFtime;
-		SummaryStatistics KMPsum;
-		SummaryStatistics KMPtime;
-		SummaryStatistics BMHsum;
-		SummaryStatistics BMHtime;
+		SummaryStatistics BTreeOcc, BTreeOps;
+		SummaryStatistics ExtHOcc, ExtHOps;
+		SummaryStatistics LinH1Occ, LinH1Ops;
+		SummaryStatistics LinH2Occ, LinH2Ops;
 		
 	
 		// test real DNA
 		if (cmd.hasOption("rd")) {
 			realDNA = init("realDNA.txt");
 			printer.println("Real DNA Text");
-			Structure brute = new BruteForceSearch(realDNA);
-			Structure kmp = new KnuthMorrisPrattSearch(realDNA);
-			GenericTextSearch bmh = new BoyerMooreHorspoolSearch(realDNA);
+			Structure btree = new BTree(realDNA);
+			Structure exthash = new ExtendibleHash(realDNA);
+			Structure linhash1 = new LinearHash1(realDNA);
+			Structure linhash2 = new LinearHash1(realDNA);
 			for(int i=l; i<=L; i++){
 				System.err.println("2^"+i);
 				printer.println("2^"+i); 
-				BFsum = new SummaryStatistics();
-				BFtime = new SummaryStatistics();
-				KMPsum = new SummaryStatistics();
-				KMPtime = new SummaryStatistics();
-				BMHsum = new SummaryStatistics();
-				BMHtime = new SummaryStatistics();
+				BTreeOcc = new SummaryStatistics();
+				BTreeOps = new SummaryStatistics();
+				ExtHOcc = new SummaryStatistics();
+				ExtHOps = new SummaryStatistics();
+				LinH1Occ = new SummaryStatistics();
+				LinH1Ops = new SummaryStatistics();
+				LinH2Occ = new SummaryStatistics();
+				LinH2Ops = new SummaryStatistics();
 				for(int iterations=1; true; iterations++){
-					char [] patron = generatePatron(extracted, 
-							realDNA, (int)Math.pow(2, i));
+					char [] patron = generatePatron(extracted, realDNA, (int)Math.pow(2, i));
 					t = System.currentTimeMillis();
 					BFsum.addValue((double)(brute.search(patron)));
 					BFtime.addValue((double)(System.currentTimeMillis() - t));

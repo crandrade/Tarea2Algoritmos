@@ -7,12 +7,12 @@ public class Utilitarian {
 	public static String searchChainInBytes(String chain, byte[] bytes) {
 		String haystack = new String(bytes);
 		int counter = 0;
-		while (counter < haystack.length() - 15) {
-			String mSubString = haystack.substring(counter, counter + 15);
+		while (counter < haystack.length() - CHAIN_SIZE) {
+			String mSubString = haystack.substring(counter, counter + CHAIN_SIZE);
 			System.out.println("Subcadena: " + mSubString);
 			if (chain.equals(mSubString))
 				return chain;
-			counter = counter + 15;
+			counter = counter + CHAIN_SIZE;
 		}
 		return null;
 	}

@@ -22,7 +22,7 @@ public class MainJavier {
 		Random random = new Random();
 		String cadena = "";
 		ExtendibleHash eHash = new ExtendibleHash();
-		for (int i = 0; i < 1000; i++) {
+		for (int i = 0; i < 200; i++) {
 			String cadenaToAdd = "";
 			for (int j = 0; j <15; j++) {
 				int mint = random.nextInt(4);

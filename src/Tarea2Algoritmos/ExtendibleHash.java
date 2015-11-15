@@ -94,9 +94,9 @@ public class ExtendibleHash implements DiskMemmoryManager {
 			}
 			boolean[] mChainBooleans = ADNHasher.hash(chain);
 			if (mChainBooleans[deepness] == false) {
-				stringsPage0 = Utilitarian.concatBytes(stringsPage0, chain.getBytes());
+				readAndInsertAfter0(stringsPage0, chain.getBytes());
 			} else {
-				stringsPage1 = Utilitarian.concatBytes(stringsPage1, chain.getBytes());
+				readAndInsertAfter0(stringsPage1, chain.getBytes());
 			}
 			dSimulator.writePage(treeLeft.getDiskPage(), stringsPage0);
 			dSimulator.writePage(treeRight.getDiskPage(), stringsPage1);
@@ -106,6 +106,18 @@ public class ExtendibleHash implements DiskMemmoryManager {
 			e.printStackTrace();
 			System.out.println("Problema IO Insert!");
 		}
+	}
+	
+	private boolean readAndInsertAfter0(byte[] pageData, byte[] chainBytes) {
+		for (int i = 0; i < DiskSimulator.BLOCK_SIZE_BYTES - chainBytes.length; i++) {
+			if (pageData[i] == 0) {
+				for (int j = 0; j < chainBytes.length; j++) {
+					pageData[i+j] = chainBytes[j];
+				}
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public boolean delete(String chain) {

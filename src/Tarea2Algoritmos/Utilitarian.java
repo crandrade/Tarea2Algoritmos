@@ -9,7 +9,6 @@ public class Utilitarian {
 		int counter = 0;
 		while (counter < haystack.length() - CHAIN_SIZE) {
 			String mSubString = haystack.substring(counter, counter + CHAIN_SIZE);
-			System.out.println("Subcadena: " + mSubString);
 			if (chain.equals(mSubString))
 				return chain;
 			counter = counter + CHAIN_SIZE;

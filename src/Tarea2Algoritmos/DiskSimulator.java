@@ -55,12 +55,15 @@ public class DiskSimulator {
 	
 	public float getOcupation() {
 		float ocupationPercentage = 0;
-		for (int i = 0; i < nextFreePage; i++) {
+		for (int i = 0; i <= nextFreePage - 1; i++) {
 			try {
 				byte[] page = getPage(i);
 				for (int j = BLOCK_SIZE_BYTES - 1; j >= 0; j--) {
 					if (page[j] != 0) {
 						ocupationPercentage = ocupationPercentage + ((float)j)/BLOCK_SIZE_BYTES;
+						System.out.println("Que j? " + j);
+						System.out.println("Que i?: " + i);
+						System.out.println("Ocupation percentage? " + ocupationPercentage);
 						break;
 					}
 				}
@@ -69,7 +72,8 @@ public class DiskSimulator {
 				e.printStackTrace();
 			}
 		}
-		return (ocupationPercentage/(nextFreePage-1))*100;
+		System.out.println("Next free page?" + (nextFreePage - 1));
+		return (ocupationPercentage/(nextFreePage-1));
 	}
 	
 	public int getIOs() {

@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.file.Files;
 
 public class DiskSimulator {
 
@@ -13,8 +14,11 @@ public class DiskSimulator {
 	
 	private int nextFreePage = 1;
 	
-	public DiskSimulator() throws FileNotFoundException {
+	private int IOs = 0;
+	
+	public DiskSimulator() throws IOException {
 		File file = new File("disk" + namer);
+		Files.deleteIfExists(file.toPath());
 		fileName = "disk" + namer;
 		rFile = new RandomAccessFile(file, "rw");
 		namer++;
@@ -34,6 +38,7 @@ public class DiskSimulator {
 		rFile.seek((long)pageNumber * BLOCK_SIZE_BYTES);
 		byte[] toReturn = new byte[BLOCK_SIZE_BYTES];
 		rFile.read(toReturn);
+		IOs++;
 		return toReturn;
 	}
 	
@@ -44,7 +49,35 @@ public class DiskSimulator {
 			return false;
 		rFile.seek((long) pageNumber * BLOCK_SIZE_BYTES);
 		rFile.write(bytes);
+		IOs++;
 		return true;
+	}
+	
+	public float getOcupation() {
+		float ocupationPercentage = 0;
+		for (int i = 0; i < nextFreePage; i++) {
+			try {
+				byte[] page = getPage(i);
+				for (int j = BLOCK_SIZE_BYTES - 1; j >= 0; j++) {
+					if (page[j] != 0) {
+						ocupationPercentage = ocupationPercentage + ((float)j)/BLOCK_SIZE_BYTES;
+						break;
+					}
+				}
+			} catch (IOException e) {
+				System.out.println("Fallamos");
+				e.printStackTrace();
+			}
+		}
+		return ocupationPercentage/(nextFreePage-1);
+	}
+	
+	public int getIOs() {
+		return IOs;
+	}
+	
+	public void resetIOs() {
+		this.IOs = 0;
 	}
 	
 	

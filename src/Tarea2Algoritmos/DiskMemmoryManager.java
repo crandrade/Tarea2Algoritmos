@@ -19,4 +19,21 @@ public interface DiskMemmoryManager {
 	 * @param chain
 	 */
 	public void add(String chain);
+	
+	/**
+	 * Obtiene el porcentaje de ocupacion de cada pagina en disco
+	 * @return
+	 */
+	public float getOcupation();
+	/**
+	 * Obtienen el numero de operaciones IO que se han realizado desde el inicio del programa
+	 * o desde que se llamo por ultima vez resetIOs
+	 * @return
+	 */
+	public int getIOs();
+	
+	/**
+	 * Resetea el numero de operaciones IO.
+	 */
+	public void resetIOs();
 }

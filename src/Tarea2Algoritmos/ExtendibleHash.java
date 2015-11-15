@@ -10,7 +10,7 @@ public class ExtendibleHash implements DiskMemmoryManager {
 	public ExtendibleHash() {
 		try {
 			dSimulator = new DiskSimulator();
-		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
 			System.out.println("Extendible Hash File Not found" +  e.toString());
 		}
 		myTree = new MyTree(0, 0);
@@ -71,7 +71,7 @@ public class ExtendibleHash implements DiskMemmoryManager {
 			byte[] stringsPage1 = new byte[DiskSimulator.BLOCK_SIZE_BYTES];
 			int pointer0 = 0;
 			int pointer1 = 0;
-			MyTree treeRight = new MyTree(deepness + 1, dSimulator.getNextFreePage());
+			MyTree treeRight = new MyTree(deepness + 1, diskPage);
 			MyTree treeLeft = new MyTree(deepness + 1, dSimulator.getNextFreePage());
 			pageTree.setRightLeft(treeRight, treeLeft);
 			String pageDataString = new String(pageData);
@@ -138,6 +138,21 @@ public class ExtendibleHash implements DiskMemmoryManager {
 			System.out.println("Problema IO delete");
 		}
 		return found;
+	}
+	
+	@Override
+	public float getOcupation() {
+		return dSimulator.getOcupation();
+	}
+
+	@Override
+	public int getIOs() {
+		return dSimulator.getIOs();
+	}
+
+	@Override
+	public void resetIOs() {
+		dSimulator.resetIOs();
 	}
 	
 	private class MyTree {

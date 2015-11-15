@@ -138,10 +138,10 @@ public class Main {
 		if (cmd.hasOption("rd")) {
 			realDNA = init("realDNA.txt");
 			printer.println("Real DNA Text");
-			Structure btree = new BTree(realDNA);
-			Structure exthash = new ExtendibleHash(realDNA);
-			Structure linhash1 = new LinearHash1(realDNA);
-			Structure linhash2 = new LinearHash1(realDNA);
+			DiskMemmoryManager btree = new BTree(realDNA);
+			DiskMemmoryManager exthash = new ExtendibleHash(realDNA);
+			DiskMemmoryManager linhash1 = new LinearHash1(realDNA);
+			DiskMemmoryManager linhash2 = new LinearHash1(realDNA);
 			for(int i=l; i<=L; i++){
 				System.err.println("2^"+i);
 				printer.println("2^"+i); 
@@ -178,60 +178,6 @@ public class Main {
 						break;
 					}
 				}
-				for(int iterations=1; true; iterations++){
-					char [] patron = generatePatron(extracted, 
-							realDNA, (int)Math.pow(2, i));
-					t = System.currentTimeMillis();
-					KMPsum.addValue((double)(kmp.search(patron)));
-					KMPtime.addValue((double)(System.currentTimeMillis() - t));
-					if(iterations%10000 == 0){
-						System.out.println(""+iterations);
-						System.err.println("Resultados realDNA KMP");
-						System.err.println("Promedio tiempo: "+(KMPtime.getMean()/1000)+" seg.");
-						System.err.println("DEstandar tiempo: "+(KMPtime.getStandardDeviation()/1000)+" seg.");
-						System.err.println("Error tiempo: "+((2*KMPtime.getStandardDeviation())/
-								Math.sqrt(iterations)*1000)+" seg.");
-						System.err.println("Promedio comps: "+(KMPsum.getMean())+" comps.");
-						System.err.println("DEstandar comps: "+(KMPsum.getStandardDeviation())+" comps.");
-						System.err.println("Error comps: "+((2*KMPsum.getStandardDeviation())/
-								Math.sqrt(iterations))+" comps.");
-					}
-					if(acceptableError(BFsum, iterations) 
-							&& acceptableError(BFtime, iterations) || iterations >= max_it){
-						printer.println("KMP Iterations: "+iterations);
-						printer.println("KMPtime:\t"+KMPtime.getMean()+"\t"+KMPtime.getVariance()+"\t"+KMPtime.getStandardDeviation());
-						printer.println("KMPsum:\t"+KMPsum.getMean()+"\t"+KMPsum.getVariance()+"\t"+KMPsum.getStandardDeviation());
-						break;
-					}
-				}
-				for(int iterations=1; true; iterations++){
-					char [] patron = generatePatron(extracted, 
-							realDNA, (int)Math.pow(2, i));
-					t = System.currentTimeMillis();
-					BMHsum.addValue((double)(bmh.search(patron)));
-					BMHtime.addValue((double)(System.currentTimeMillis() - t));
-					if(iterations%10000 == 0){
-						System.out.println(""+iterations);
-						System.err.println("Resultados realDNA BMH");
-						System.err.println("Promedio tiempo: "+(BMHtime.getMean()/1000)+" seg.");
-						System.err.println("DEstandar tiempo: "+(BMHtime.getStandardDeviation()/1000)+" seg.");
-						System.err.println("Error tiempo: "+((2*BMHtime.getStandardDeviation())/
-								Math.sqrt(iterations)*1000)+" seg.");
-						System.err.println("Promedio comps: "+(BMHsum.getMean())+" comps.");
-						System.err.println("DEstandar comps: "+(BMHsum.getStandardDeviation())+" comps.");
-						System.err.println("Error comps: "+((2*BMHsum.getStandardDeviation())/
-								Math.sqrt(iterations))+" comps.");
-					}
-					if(acceptableError(BFsum, iterations) 
-							&& acceptableError(BFtime, iterations) || iterations >= max_it){
-						printer.println("BMH Iterations: "+iterations);
-						printer.println("BMHtime:\t"+BMHtime.getMean()+"\t"+BMHtime.getVariance()+"\t"+BMHtime.getStandardDeviation());
-						printer.println("BMHsum:\t"+BMHsum.getMean()+"\t"+BMHsum.getVariance()+"\t"+BMHsum.getStandardDeviation());
-						break;
-					}
-				}
-				
-			}
 			destroy(realDNA);
 		}	
 		// test fake DNA

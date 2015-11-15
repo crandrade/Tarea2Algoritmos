@@ -90,7 +90,6 @@ public class ExtendibleHash implements DiskMemmoryManager {
 					}
 					pointer1 = pointer1 + chainBytes.length;
 				}
-				// TODO y quizas mas 1
 				counter = counter + Utilitarian.CHAIN_SIZE;
 			}
 			boolean[] mChainBooleans = ADNHasher.hash(chain);

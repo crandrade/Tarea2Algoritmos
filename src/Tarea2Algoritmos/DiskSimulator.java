@@ -58,7 +58,7 @@ public class DiskSimulator {
 		for (int i = 0; i < nextFreePage; i++) {
 			try {
 				byte[] page = getPage(i);
-				for (int j = BLOCK_SIZE_BYTES - 1; j >= 0; j++) {
+				for (int j = BLOCK_SIZE_BYTES - 1; j >= 0; j--) {
 					if (page[j] != 0) {
 						ocupationPercentage = ocupationPercentage + ((float)j)/BLOCK_SIZE_BYTES;
 						break;
@@ -69,7 +69,7 @@ public class DiskSimulator {
 				e.printStackTrace();
 			}
 		}
-		return ocupationPercentage/(nextFreePage-1);
+		return (ocupationPercentage/(nextFreePage-1))*100;
 	}
 	
 	public int getIOs() {

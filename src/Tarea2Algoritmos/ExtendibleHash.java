@@ -2,7 +2,7 @@ package Tarea2Algoritmos;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class ExtendibleHash {
+public class ExtendibleHash implements DiskMemmoryManager {
 	
 	private DiskSimulator dSimulator;
 	private MyTree myTree;
@@ -29,7 +29,7 @@ public class ExtendibleHash {
 		return pageTree;
 	}
 	
-	public String findChain(String chain) {
+	public String find(String chain) {
 		int diskPage = getMyTreeForChain(chain).getDiskPage();
 		try {
 			byte[] pageBytes = dSimulator.getPage(diskPage);
@@ -41,7 +41,7 @@ public class ExtendibleHash {
 		return null;
 	}
 	
-	public void insertChain(String chain) {
+	public void add(String chain) {
 		MyTree pageTree = getMyTreeForChain(chain);
 		int diskPage = pageTree.getDiskPage();
 		int deepness = pageTree.getDeepness();
@@ -109,25 +109,35 @@ public class ExtendibleHash {
 		}
 	}
 	
-	public void deleteChain(String chain) {
+	public boolean delete(String chain) {
 		MyTree pageTree = getMyTreeForChain(chain);
 		int diskPage = pageTree.getDiskPage();
+		boolean found = false;
 		try {
 			byte[] pageData = dSimulator.getPage(diskPage);
-			byte[] newStringBytes = new byte[0];
+			byte[] newStringBytes = new byte[DiskSimulator.BLOCK_SIZE_BYTES];
 			String pageDataString = new String(pageData);
 			int counter = 0;
-			while (counter < pageDataString.length()) {
+			int writerPointer = 0;
+			while (counter < pageDataString.length() - Utilitarian.CHAIN_SIZE) {
 				String toAdd = pageDataString.substring(counter, counter + Utilitarian.CHAIN_SIZE);
-				if (!toAdd.equals(chain))
-					newStringBytes = Utilitarian.concatBytes(newStringBytes, chain.getBytes());
-				counter = counter + Utilitarian.CHAIN_SIZE + 1;
+				if (toAdd.equals(chain)) {
+					found = true;
+				} else {
+					for (int j = 0; j < toAdd.getBytes().length; j++) {
+						newStringBytes[writerPointer+j] = toAdd.getBytes()[j];
+					}
+					writerPointer = writerPointer + Utilitarian.CHAIN_SIZE;
+				}
+				counter = counter + Utilitarian.CHAIN_SIZE;
 			}
+			dSimulator.writePage(diskPage, newStringBytes);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println("Problema IO delete");
 		}
+		return found;
 	}
 	
 	private class MyTree {

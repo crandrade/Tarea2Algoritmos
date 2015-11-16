@@ -16,5 +16,17 @@ public class Utilitarian {
 		return null;
 	}
 	
+	public static boolean readAndInsertAfter0(byte[] pageData, byte[] chainBytes) {
+		for (int i = 0; i < DiskSimulator.BLOCK_SIZE_BYTES - chainBytes.length; i++) {
+			if (pageData[i] == 0) {
+				for (int j = 0; j < chainBytes.length; j++) {
+					pageData[i+j] = chainBytes[j];
+				}
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	
 }

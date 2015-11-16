@@ -30,4 +30,26 @@ public class ADNHasher {
 		return toReturn;
 	}
 	
+	public static long longHash(String ADNChain) {
+		String intBuilder = "";
+		for (int i = 0; i < ADNChain.length(); i++) {
+			char mchar = ADNChain.charAt(i);
+			switch (mchar) {
+			case 'G' : 
+				intBuilder = intBuilder + "1";
+				break;
+			case 'C' :
+				intBuilder = intBuilder + "2";
+				break;
+			case 'A' :
+				intBuilder = intBuilder + "3";
+				break;
+			case 'T' :
+				intBuilder = intBuilder + "4";
+				break;
+			}
+		}
+		return Long.parseLong(intBuilder);
+	}
+	
 }

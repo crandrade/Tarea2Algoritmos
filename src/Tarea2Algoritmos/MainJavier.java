@@ -17,7 +17,7 @@ public class MainJavier {
 		//System.out.println("Deleted? : " + eHash.delete("ABCGGGGGGGGGGGTA"));
 		//System.out.println("Is there? : " + eHash.find("ABCDGGGGGGGGGTA"));
 		//System.out.println("Other was unaffected s? : " + eHash.find("GGGGGGGGGGGGGTA"));
-		
+		/*
 		boolean first = true;
 		
 		Random random = new Random();
@@ -64,6 +64,14 @@ public class MainJavier {
 		System.out.println("IOs: " + eHash.getIOs());
 		//eHash.findChain(cadena);
 		//eHash.deleteChain(cadena);
+		 * 
+		 */
+		
+		LinearHashV1 linearHash = new LinearHashV1();
+		linearHash.add("GGGGGGGGGGGGGGG");
+		linearHash.add("CCCCCCCCCCCCCCC");
+		System.out.println("Find 1: " + linearHash.find("GGGGGGGGGGGGGGG"));
+		System.out.println("Find 2: " + linearHash.find("CCCCCCCCCCCCCCC"));
 		
 	}
 	

@@ -8,6 +8,7 @@ public class MainJavier {
 		String c2 = "TTAA";
 		boolean[] c1b = ADNHasher.hash(c1);
 		boolean[] c2b = ADNHasher.hash(c2);
+		String cadena2 = "";
 		//ExtendibleHash eHash = new ExtendibleHash();
 		//eHash.add("GGGGGGGGGGGGGTG");
 		//eHash.add("AAAAAAAAAAAAAAA");
@@ -17,7 +18,7 @@ public class MainJavier {
 		//System.out.println("Is there? : " + eHash.find("ABCDGGGGGGGGGTA"));
 		//System.out.println("Other was unaffected s? : " + eHash.find("GGGGGGGGGGGGGTA"));
 		
-		
+		boolean first = true;
 		
 		Random random = new Random();
 		String cadena = "";
@@ -43,6 +44,11 @@ public class MainJavier {
 				}
 				cadenaToAdd = cadenaToAdd + toAdd;
 			}
+			if (first) {
+				first = false;
+				cadena2 = cadenaToAdd;
+				System.out.println("FIRST TIME: " + cadena2);
+			}
 			eHash.add(cadenaToAdd);
 			cadena = cadenaToAdd;
 		}
@@ -51,6 +57,9 @@ public class MainJavier {
 		System.out.println("Terminado");
 		System.out.println("cadena: " + cadena);
 		System.out.println("100% : " + eHash.find(cadena));
+		System.out.println("Cadena 2: " + cadena2);
+		System.out.println("100% : " + eHash.find(cadena2));
+		
 		System.out.println("Ocupacion: " + eHash.getOcupation());
 		System.out.println("IOs: " + eHash.getIOs());
 		//eHash.findChain(cadena);

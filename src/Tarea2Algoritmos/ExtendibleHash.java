@@ -2,7 +2,7 @@ package Tarea2Algoritmos;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class ExtendibleHash implements DiskMemmoryManager {
+public class ExtendibleHash implements DiskMemoryManager {
 	
 	private DiskSimulator dSimulator;
 	private MyTree myTree;
@@ -25,6 +25,7 @@ public class ExtendibleHash implements DiskMemmoryManager {
 				pageTree = pageTree.getLeft();
 			else
 				pageTree = pageTree.getRight();
+			currIndex++;
 		}
 		return pageTree;
 	}
@@ -48,24 +49,11 @@ public class ExtendibleHash implements DiskMemmoryManager {
 		try {
 			byte[] pageData = dSimulator.getPage(diskPage);
 			byte[] chainBytes = chain.getBytes();
-			boolean found = false;
-			// Leo hasta encontrar 0 y ahi inserto;
-			for (int i = 0; i < DiskSimulator.BLOCK_SIZE_BYTES - chainBytes.length; i++) {
-				if (pageData[i] == 0) {
-					for (int j = 0; j < chainBytes.length; j++) {
-						pageData[i+j] = chainBytes[j];
-					}
-					found = true;
-					break;
-				}
-			}
-			if (found) {
-				//System.out.println("Is no replacemtent");
+			boolean couldInsert  = readAndInsertAfter0(pageData, chainBytes);
+			if (couldInsert) {
 				dSimulator.writePage(diskPage, pageData);
-				//System.out.println("End no replacement");
 				return;
 			}
-			System.out.println("Not succesfull");
 			/* Se debe hacer el split de paginas */
 			byte[] stringsPage0 = new byte[DiskSimulator.BLOCK_SIZE_BYTES];
 			byte[] stringsPage1 = new byte[DiskSimulator.BLOCK_SIZE_BYTES];
@@ -78,22 +66,23 @@ public class ExtendibleHash implements DiskMemmoryManager {
 			int counter = 0;
 			while (counter < pageDataString.length() - Utilitarian.CHAIN_SIZE) {
 				String toAdd = pageDataString.substring(counter, counter + Utilitarian.CHAIN_SIZE);
+				byte[] toAddBytes = toAdd.getBytes();
 				boolean[] toAddBooleans = ADNHasher.hash(toAdd);
-				if (toAddBooleans[deepness] == false) {
-					for (int j = 0; j < chainBytes.length; j++) {
-						stringsPage0[pointer0+j] = chainBytes[j];
+				if (toAddBooleans[deepness + 1] == false) {
+					for (int j = 0; j < toAddBytes.length; j++) {
+						stringsPage0[pointer0+j] = toAddBytes[j];
 					}
-					pointer0 = pointer0 + chainBytes.length;
+					pointer0 = pointer0 + toAddBytes.length;
 				} else {
-					for (int j = 0; j < chainBytes.length; j++) {
-						stringsPage1[pointer1+j] = chainBytes[j];
+					for (int j = 0; j < toAddBytes.length; j++) {
+						stringsPage1[pointer1+j] = toAddBytes[j];
 					}
-					pointer1 = pointer1 + chainBytes.length;
+					pointer1 = pointer1 + toAddBytes.length;
 				}
 				counter = counter + Utilitarian.CHAIN_SIZE;
 			}
 			boolean[] mChainBooleans = ADNHasher.hash(chain);
-			if (mChainBooleans[deepness] == false) {
+			if (mChainBooleans[deepness + 1] == false) {
 				readAndInsertAfter0(stringsPage0, chain.getBytes());
 			} else {
 				readAndInsertAfter0(stringsPage1, chain.getBytes());
@@ -101,6 +90,9 @@ public class ExtendibleHash implements DiskMemmoryManager {
 			dSimulator.writePage(treeLeft.getDiskPage(), stringsPage0);
 			dSimulator.writePage(treeRight.getDiskPage(), stringsPage1);
 			
+			String mdebug = pageDataString;
+			String leftPage = new String(stringsPage0);
+			String rightPage = new String(stringsPage1);
 			
 		} catch (IOException e) {
 			e.printStackTrace();

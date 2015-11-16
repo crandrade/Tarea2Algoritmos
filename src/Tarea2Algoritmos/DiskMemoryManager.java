@@ -1,6 +1,6 @@
 package Tarea2Algoritmos;
 
-public interface DiskMemmoryManager {
+public interface DiskMemoryManager {
 
 	/**
 	 * Busca en la estructura de datos el String chain

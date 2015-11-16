@@ -11,6 +11,7 @@ public class DiskSimulator {
 	private static int namer = 0;
 	private RandomAccessFile rFile;
 	private String fileName;
+
 	
 	private int nextFreePage = 1;
 	
@@ -44,7 +45,6 @@ public class DiskSimulator {
 	
 	
 	public boolean writePage(int pageNumber, byte[] bytes) throws IOException {
-		System.out.println("Size bytes" + bytes.length);
 		if (bytes.length > BLOCK_SIZE_BYTES)
 			return false;
 		rFile.seek((long) pageNumber * BLOCK_SIZE_BYTES);
@@ -61,9 +61,6 @@ public class DiskSimulator {
 				for (int j = BLOCK_SIZE_BYTES - 1; j >= 0; j--) {
 					if (page[j] != 0) {
 						ocupationPercentage = ocupationPercentage + ((float)j)/BLOCK_SIZE_BYTES;
-						System.out.println("Que j? " + j);
-						System.out.println("Que i?: " + i);
-						System.out.println("Ocupation percentage? " + ocupationPercentage);
 						break;
 					}
 				}

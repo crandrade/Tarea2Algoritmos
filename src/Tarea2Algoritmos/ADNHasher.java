@@ -9,20 +9,20 @@ public class ADNHasher {
 			char mchar = ADNChain.charAt(i);
 			switch (mchar) {
 			case 'G' : 
-				toReturn[i] = false;
-				toReturn[i+1] = false;
+				toReturn[j] = false;
+				toReturn[j+1] = false;
 				break;
 			case 'C' :
-				toReturn[i] = false;
-				toReturn[i+1] = true;
+				toReturn[j] = false;
+				toReturn[j+1] = true;
 				break;
 			case 'A' :
-				toReturn[i] = true;
-				toReturn[i+1] = false;
+				toReturn[j] = true;
+				toReturn[j+1] = false;
 				break;
 			case 'T' :
-				toReturn[i] = true;
-				toReturn[i+1] = true;
+				toReturn[j] = true;
+				toReturn[j+1] = true;
 				break;
 			}
 			j = j + 2;

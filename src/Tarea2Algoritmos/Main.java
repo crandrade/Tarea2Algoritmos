@@ -41,10 +41,11 @@ public class Main {
 		System.gc();
 	}
 	
-	static public String generateChain(boolean o, Structure struct, int l){
-		String patron = "";
+	static public String [] generateChains(boolean o, String [] chain, int l){
+		String [] patron = new String [10000];
 		if(o){
-			patron = struct.obtain();
+			int i = ThreadLocalRandom.current().nextInt(0, (int)Math.pow(2,l));
+			patron = chain[i];
 		}
 		else{
 			String [] bases = {"G","C","A","T"};
@@ -119,10 +120,10 @@ public class Main {
 			L=nn;
 		}
 		System.err.println(L);
-		int max_it=10000;
+		int max_it=100;
 		if (cmd.hasOption("iterations")) {
 			int nn = Integer.parseInt(cmd.getOptionValue(iter.getOpt()));
-			if(nn>=100 && nn<=10000)
+			if(nn>=1 && nn<=10000)
 			max_it=nn;
 		}
 		boolean random = true;
@@ -136,27 +137,36 @@ public class Main {
 	
 		// test real DNA
 		if (cmd.hasOption("rd")) {
-			for(int r=0; r<iterations; r++){
+			for(int r=0; r<max_it; r++){
 				realDNA = init("realDNA"+r+".txt");
 				printer.println("Real DNA test "+r);
+				System.err.println("Setting up Real DNA test "+r);
 				DiskMemoryManager btree = new BTree();
 				DiskMemoryManager exthash = new ExtendibleHash();
-				DiskMemoryManager linhash1 = new LinearHashV1();
-				DiskMemoryManager linhash2 = new LinearHashV2();
+				DiskMemoryManager linhashV1 = new LinearHashV1();
+				DiskMemoryManager linhashV2 = new LinearHashV2();
+				BTreeOcc = new SummaryStatistics();
+				BTreeOps = new SummaryStatistics();
+				ExtHOcc = new SummaryStatistics();
+				ExtHOps = new SummaryStatistics();
+				LinH1Occ = new SummaryStatistics();
+				LinH1Ops = new SummaryStatistics();
+				LinH2Occ = new SummaryStatistics();
+				LinH2Ops = new SummaryStatistics();
+				int max = (int)Math.pow(2,20);
+				for(int i=0; i<max; i++){
+					btree.add(realDNA[i]);
+					exthash.add(realDNA[i]);
+					linhashV1.add(realDNA[i]);
+					linhashV2.add(realDNA[i]);
+				}
+				// measure statistics
 				for(int i=l; i<=L; i++){
 					System.err.println("2^"+i);
 					printer.println("2^"+i); 
-					BTreeOcc = new SummaryStatistics();
-					BTreeOps = new SummaryStatistics();
-					ExtHOcc = new SummaryStatistics();
-					ExtHOps = new SummaryStatistics();
-					LinH1Occ = new SummaryStatistics();
-					LinH1Ops = new SummaryStatistics();
-					LinH2Occ = new SummaryStatistics();
-					LinH2Ops = new SummaryStatistics();
+
 					for(int iterations=1; true; iterations++){
 						char [] patron = generatePatron(extracted, realDNA, (int)Math.pow(2, i));
-						t = System.currentTimeMillis();
 						BFsum.addValue((double)(brute.search(patron)));
 						BFtime.addValue((double)(System.currentTimeMillis() - t));
 						if(iterations%10000 == 0){

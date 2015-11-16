@@ -13,9 +13,9 @@ public class DiskSimulator {
 	private String fileName;
 
 	
-	private int nextFreePage = 1;
+	private int nextFreePage;
 	
-	private int IOs = 0;
+	private int IOs;
 	
 	public DiskSimulator() throws IOException {
 		File file = new File("disk" + namer);
@@ -23,6 +23,8 @@ public class DiskSimulator {
 		fileName = "disk" + namer;
 		rFile = new RandomAccessFile(file, "rw");
 		namer++;
+		this.nextFreePage = 1;
+		this.IOs = 0;
 	}
 	
 	public String getName() {

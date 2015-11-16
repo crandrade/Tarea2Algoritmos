@@ -24,7 +24,7 @@ public interface DiskMemoryManager {
 	 * Obtiene el porcentaje de ocupacion de cada pagina en disco
 	 * @return
 	 */
-	public float getOcupation();
+	public float getOccupation();
 	/**
 	 * Obtienen el numero de operaciones IO que se han realizado desde el inicio del programa
 	 * o desde que se llamo por ultima vez resetIOs

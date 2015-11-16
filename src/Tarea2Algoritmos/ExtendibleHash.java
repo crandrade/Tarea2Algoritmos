@@ -144,8 +144,8 @@ public class ExtendibleHash implements DiskMemoryManager {
 	}
 	
 	@Override
-	public float getOcupation() {
-		return dSimulator.getOcupation();
+	public float getOccupation() {
+		return dSimulator.getOccupation();
 	}
 
 	@Override

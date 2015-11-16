@@ -21,22 +21,22 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 public class Main {
-	static protected char[] realDNA;
-	static protected char[] fakeDNA;
+	static protected String[] realDNA;
+	static protected String[] fakeDNA;
 	
-	static public char [] init(String filename) throws FileNotFoundException{
-		String line = "";
+	static public String[] init(String filename) throws FileNotFoundException{
+		int i = (int)Math.pow(2, 25);
+		String line [] = new String[i];
 		File file = new File(filename);
 		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(file);
-		line = scanner.nextLine();
+		line[i++]= scanner.nextLine();
 		while (scanner.hasNextLine()) {
-		       line += scanner.nextLine();
+		       line[i++]= scanner.nextLine();
 		}
-		//line = line.trim().replaceAll("[^A-Za-z ]", " ");
-		return line.toCharArray();
+		return line;
 	}
-	static public void destroy(char[] text){
+	static public void destroy(String[] text){
 		text = null;
 		System.gc();
 	}
@@ -136,50 +136,53 @@ public class Main {
 	
 		// test real DNA
 		if (cmd.hasOption("rd")) {
-			realDNA = init("realDNA.txt");
-			printer.println("Real DNA Text");
-			DiskMemmoryManager btree = new BTree(realDNA);
-			DiskMemmoryManager exthash = new ExtendibleHash(realDNA);
-			DiskMemmoryManager linhash1 = new LinearHash1(realDNA);
-			DiskMemmoryManager linhash2 = new LinearHash1(realDNA);
-			for(int i=l; i<=L; i++){
-				System.err.println("2^"+i);
-				printer.println("2^"+i); 
-				BTreeOcc = new SummaryStatistics();
-				BTreeOps = new SummaryStatistics();
-				ExtHOcc = new SummaryStatistics();
-				ExtHOps = new SummaryStatistics();
-				LinH1Occ = new SummaryStatistics();
-				LinH1Ops = new SummaryStatistics();
-				LinH2Occ = new SummaryStatistics();
-				LinH2Ops = new SummaryStatistics();
-				for(int iterations=1; true; iterations++){
-					char [] patron = generatePatron(extracted, realDNA, (int)Math.pow(2, i));
-					t = System.currentTimeMillis();
-					BFsum.addValue((double)(brute.search(patron)));
-					BFtime.addValue((double)(System.currentTimeMillis() - t));
-					if(iterations%10000 == 0){
-						System.out.println(""+iterations);
-						System.err.println("Resultados realDNA BF");
-						System.err.println("Promedio tiempo: "+(BFtime.getMean()/1000)+" seg.");
-						System.err.println("DEstandar tiempo: "+(BFtime.getStandardDeviation()/1000)+" seg.");
-						System.err.println("Error tiempo: "+((2*BFtime.getStandardDeviation())/
-								Math.sqrt(iterations)*1000)+" seg.");
-						System.err.println("Promedio comps: "+(BFsum.getMean())+" comps.");
-						System.err.println("DEstandar comps: "+(BFsum.getStandardDeviation())+" comps.");
-						System.err.println("Error comps: "+((2*BFsum.getStandardDeviation())/
-								Math.sqrt(iterations))+" comps.");
+			for(int r=0; r<iterations; r++){
+				realDNA = init("realDNA"+r+".txt");
+				printer.println("Real DNA test "+r);
+				DiskMemoryManager btree = new BTree();
+				DiskMemoryManager exthash = new ExtendibleHash();
+				DiskMemoryManager linhash1 = new LinearHashV1();
+				DiskMemoryManager linhash2 = new LinearHashV2();
+				for(int i=l; i<=L; i++){
+					System.err.println("2^"+i);
+					printer.println("2^"+i); 
+					BTreeOcc = new SummaryStatistics();
+					BTreeOps = new SummaryStatistics();
+					ExtHOcc = new SummaryStatistics();
+					ExtHOps = new SummaryStatistics();
+					LinH1Occ = new SummaryStatistics();
+					LinH1Ops = new SummaryStatistics();
+					LinH2Occ = new SummaryStatistics();
+					LinH2Ops = new SummaryStatistics();
+					for(int iterations=1; true; iterations++){
+						char [] patron = generatePatron(extracted, realDNA, (int)Math.pow(2, i));
+						t = System.currentTimeMillis();
+						BFsum.addValue((double)(brute.search(patron)));
+						BFtime.addValue((double)(System.currentTimeMillis() - t));
+						if(iterations%10000 == 0){
+							System.out.println(""+iterations);
+							System.err.println("Resultados realDNA BF");
+							System.err.println("Promedio tiempo: "+(BFtime.getMean()/1000)+" seg.");
+							System.err.println("DEstandar tiempo: "+(BFtime.getStandardDeviation()/1000)+" seg.");
+							System.err.println("Error tiempo: "+((2*BFtime.getStandardDeviation())/
+									Math.sqrt(iterations)*1000)+" seg.");
+							System.err.println("Promedio comps: "+(BFsum.getMean())+" comps.");
+							System.err.println("DEstandar comps: "+(BFsum.getStandardDeviation())+" comps.");
+							System.err.println("Error comps: "+((2*BFsum.getStandardDeviation())/
+									Math.sqrt(iterations))+" comps.");
+						}
+						if(acceptableError(BFsum, iterations) 
+								&& acceptableError(BFtime, iterations) || iterations >= max_it){
+							printer.println("BF Iterations: "+iterations);
+							printer.println("BFtime:\t"+BFtime.getMean()+"\t"+BFtime.getVariance()+"\t"+BFtime.getStandardDeviation());
+							printer.println("BFsum:\t"+BFsum.getMean()+"\t"+BFsum.getVariance()+"\t"+BFsum.getStandardDeviation());
+							break;
+						}
 					}
-					if(acceptableError(BFsum, iterations) 
-							&& acceptableError(BFtime, iterations) || iterations >= max_it){
-						printer.println("BF Iterations: "+iterations);
-						printer.println("BFtime:\t"+BFtime.getMean()+"\t"+BFtime.getVariance()+"\t"+BFtime.getStandardDeviation());
-						printer.println("BFsum:\t"+BFsum.getMean()+"\t"+BFsum.getVariance()+"\t"+BFsum.getStandardDeviation());
-						break;
-					}
+					destroy(realDNA);
 				}
-			destroy(realDNA);
-		}	
+			}
+		}
 		// test fake DNA
 		if (cmd.hasOption("fd")) {
 			fakeDNA = init("fakeDNA.txt");

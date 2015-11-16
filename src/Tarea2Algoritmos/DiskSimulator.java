@@ -53,7 +53,7 @@ public class DiskSimulator {
 		return true;
 	}
 	
-	public float getOcupation() {
+	public float getOccupation() {
 		float ocupationPercentage = 0;
 		for (int i = 0; i <= nextFreePage - 1; i++) {
 			try {

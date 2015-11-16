@@ -3,7 +3,7 @@ package Tarea2Algoritmos;
 import java.io.IOException;
 import java.util.LinkedList;
 
-public class LinearHashV1 implements DiskMemoryManager {
+public class LinearHashV2 implements DiskMemoryManager {
 	
 	private DiskSimulator dSimulator;
 	
@@ -15,7 +15,7 @@ public class LinearHashV1 implements DiskMemoryManager {
 	private int uncheckedInsertOperations = 0;
 	private int uncheckedDeleteOperations = 0;
 	
-	public LinearHashV1() {
+	public LinearHashV2() {
 		try {
 			dSimulator = new DiskSimulator();
 		} catch (IOException e) {

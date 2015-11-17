@@ -3,14 +3,8 @@ package Tarea2Algoritmos;
 import java.io.IOException;
 import java.util.LinkedList;
 
-public class LinearHashV1 implements DiskMemoryManager {
+public class LinearHashV1 extends LinearHash implements DiskMemoryManager {
 	
-	private DiskSimulator dSimulator;
-	
-	private LinkedList<Bucket> buckets;
-	
-	private int nBucketsReales = 1;
-	private int s2BucketsVirtuales = 2;
 	
 	private int uncheckedInsertOperations = 0;
 	private int uncheckedDeleteOperations = 0;
@@ -37,10 +31,6 @@ public class LinearHashV1 implements DiskMemoryManager {
 		}
 	}
 	
-	private void expand() {
-		/* Expandir */
-	}
-	
 	private void checkMaybeCompress() {
 		if (uncheckedDeleteOperations > 20) {
 			uncheckedDeleteOperations = 0;
@@ -51,19 +41,6 @@ public class LinearHashV1 implements DiskMemoryManager {
 		}
 	}
 	
-	private void compress() {
-		/* Compress */
-	}
-	
-	private Bucket getBucket(String chain) {
-		int toInsert;
-		if (ADNHasher.longHash(chain) % (s2BucketsVirtuales/2) < nBucketsReales % (s2BucketsVirtuales/2))
-			toInsert = (int) (ADNHasher.longHash(chain) % s2BucketsVirtuales);
-		else
-			toInsert = (int) (ADNHasher.longHash(chain) % (s2BucketsVirtuales/2));
-		Bucket bToInsert = buckets.get(toInsert);
-		return bToInsert;
-	}
 	
 	@Override
 	public String find(String chain) {

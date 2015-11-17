@@ -11,7 +11,6 @@ public class DiskSimulator {
 	private static int namer = 0;
 	private RandomAccessFile rFile;
 	private String fileName;
-
 	
 	private int nextFreePage;
 	

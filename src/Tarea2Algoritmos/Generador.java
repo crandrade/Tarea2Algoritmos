@@ -13,7 +13,7 @@ import org.apache.commons.cli.ParseException;
 public class Generador {
 
 	static public void generate(int iterations) throws IOException{
-		String dir = "fakedna";
+		String dir = "fakeDNA";
 		for(int r=0; r<iterations; r++){
 			System.err.println("Opening file at "+dir+r+".txt");
 			File fDir = new File(dir+r+".txt");

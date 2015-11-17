@@ -3,7 +3,6 @@ package Tarea2Algoritmos;
 import java.io.IOException;
 import java.util.LinkedList;
 
-import org.apache.commons.math3.ode.ExpandableStatefulODE;
 
 public class LinearHashV2 extends LinearHash implements DiskMemoryManager {
 	

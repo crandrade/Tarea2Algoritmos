@@ -36,7 +36,7 @@ public class Main {
 		line[j++]= scanner.nextLine();
 		while (scanner.hasNextLine() && j<i) {
 		       line[j++]= scanner.nextLine();
-		       if(j%100000 == 0){
+		       if(j%1000000 == 0){
 		    	   System.err.print(",");
 		       }
 		}
@@ -215,7 +215,7 @@ public class Main {
 				System.err.print("Setting up Real DNA test "+r);
 				realDNA = init("realDNA"+r+".txt");
 				System.err.print(".");
-				DiskMemoryManager btree = new BTree();
+				DiskMemoryManager btree = new DummyBTree();
 				System.err.print(".");
 				DiskMemoryManager exthash = new ExtendibleHash();
 				System.err.print(".");
@@ -505,7 +505,7 @@ public class Main {
 				System.err.print("Setting up Fake DNA test "+r);
 				realDNA = init("fakeDNA"+r+".txt");
 				System.err.print(".");
-				DiskMemoryManager btree = new BTree();
+				DiskMemoryManager btree = new DummyBTree();
 				System.err.print(".");
 				DiskMemoryManager exthash = new ExtendibleHash();
 				System.err.print(".");

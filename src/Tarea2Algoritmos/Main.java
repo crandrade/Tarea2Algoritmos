@@ -32,9 +32,10 @@ public class Main {
 		File file = new File(filename);
 		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(file);
-		line[i++]= scanner.nextLine();
-		while (scanner.hasNextLine()) {
-		       line[i++]= scanner.nextLine();
+		int j=0;
+		line[j++]= scanner.nextLine();
+		while (scanner.hasNextLine() && j<i) {
+		       line[j++]= scanner.nextLine();
 		}
 		return line;
 	}

@@ -503,7 +503,7 @@ public class Main {
 			for(int r=0; r<max_it; r++){
 				printer.println("Fake DNA test "+r);
 				System.err.print("Setting up Fake DNA test "+r);
-				realDNA = init("fakeDNA"+r+".txt");
+				fakeDNA = init("fakeDNA"+r+".txt");
 				System.err.print(".");
 				DiskMemoryManager btree = new DummyBTree();
 				System.err.print(".");
@@ -602,7 +602,7 @@ public class Main {
 				Collections.shuffle(a); 
 				fakeDNA = (String[])a.toArray();
 				
-				System.gc(); // clean old realDNA
+				System.gc(); // clean old fakeDNA
 				for(int i=L; i>l; i--){
 					System.err.print("2^"+i+"->2^"+(i-1)+" >> ");
 					min = (int)Math.pow(2,i-1);

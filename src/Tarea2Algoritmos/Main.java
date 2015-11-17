@@ -43,17 +43,21 @@ public class Main {
 	
 	static public String [] generateChains(boolean o, String [] chain, int l){
 		String [] patron = new String [10000];
-		if(o){
-			int i = ThreadLocalRandom.current().nextInt(0, (int)Math.pow(2,l));
-			patron = chain[i];
-		}
-		else{
-			String [] bases = {"G","C","A","T"};
-			String line="";
-			for(int k=0; k<15; k++){
-				line+="" + bases[ThreadLocalRandom.current().nextInt(0, 4)];
+		if(o){ // o == true
+			for(int j = 0; j< 10000; j++){
+				int i = ThreadLocalRandom.current().nextInt(0, (int)Math.pow(2,l));
+				patron[j] = chain[i];
 			}
-			patron = line;
+		}
+		else{ //o == false
+			String [] bases = {"G","C","A","T"};
+			for(int j = 0; j< 10000; j++){
+				String line="";
+				for(int k=0; k<15; k++){
+					line+="" + bases[ThreadLocalRandom.current().nextInt(0, 4)];
+				}
+				patron[j] = line;
+			}
 		}
 		return patron;
 	}
@@ -66,15 +70,15 @@ public class Main {
 		else return false;
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args){
 		// TODO Auto-generated method stub
 		Option iter = new Option("iterations", "Number of iterations");
 		iter.setArgs(1);
 		iter.setRequired(true);
-		Option power = new Option("i", "Log (Min lenght of patron)");
+		Option power = new Option("i", "Log (Min lenght of file (lines))");
 		power.setArgs(1);
 		power.setRequired(true);
-		Option power2 = new Option("I", "Log (Max lenght of patron)");
+		Option power2 = new Option("I", "Log (Max lenght of file (lines)");
 		power2.setArgs(1);
 		power2.setRequired(true);
 		Option rDNA = new Option("rd", "Real DNA input file");
@@ -101,194 +105,298 @@ public class Main {
 			return;
 		}
 	
-		String dir = new SimpleDateFormat("YYYYMMDD HH:mm:ss.S").format(new Date())+" output.txt";
+		String dir = new SimpleDateFormat("yyyyMMdd HH:mm:ss").format(new Date())+" output.txt";
 		System.err.println("Opening file at  "+dir);
 		File fDir = new File(dir);
 		PrintWriter printer = new PrintWriter(new FileWriter(fDir,true));
 		
-		int l=20;
-		if (cmd.hasOption("i")) {
-			int nn = Integer.parseInt(cmd.getOptionValue(power.getOpt()));
-			if(nn>19 && nn<=25)
-			l=nn;
-		}
-		System.err.println(l);
-		int L=25;
-		if (cmd.hasOption("I")) {
-			int nn = Integer.parseInt(cmd.getOptionValue(power2.getOpt()));
-			if(nn>=20 && nn<=25 && nn>=l)
-			L=nn;
-		}
-		System.err.println(L);
+		int l=20; // minimal measure
+		int L=25; // maximal measure
 		int max_it=100;
 		if (cmd.hasOption("iterations")) {
 			int nn = Integer.parseInt(cmd.getOptionValue(iter.getOpt()));
 			if(nn>=1 && nn<=10000)
 			max_it=nn;
 		}
-		boolean random = true;
-		boolean extracted = false;
+		boolean random = false;
+		boolean extracted = true;
 		long t=0;
-		SummaryStatistics BTreeOcc, BTreeOps;
-		SummaryStatistics ExtHOcc, ExtHOps;
-		SummaryStatistics LinH1Occ, LinH1Ops;
-		SummaryStatistics LinH2Occ, LinH2Ops;
+		/*
+		Medir Ocupación:
+		Al entrar 2^20, 2^21, 2^22, 2^23, 2^24, 2^25
+		Al salir 2^24, 2^23, 2^22, 2^21, 2^20
+		*/
+
+		SummaryStatistics BTree_OccIn[6];
+		SummaryStatistics BTree_OccOut[5];
+		SummaryStatistics ExtHash_OccIn[6];
+		SummaryStatistics ExtHash_OccOut[5];
+		SummaryStatistics LinHashV1_OccIn[6];
+		SummaryStatistics LinHashV1_OccOut[5];
+		SummaryStatistics LinHashV2_OccIn[6];
+		SummaryStatistics LinHashV2_OccOut[5];
 		
+		/*Medir IO
+		for i in [20, 25]
+			Luego de insertar 2^i
+			Tras realizar 10000 búsquedas "exitosas"
+			Tras realizar 10000 búsquedas "infructuosas"
+		for i in [25, 21]
+			Luego de borrar entre i e i-1
+		Luego de borrar todo
+		*/
+		SummaryStatistics BTree_IO_insert[6];
+		SummaryStatistics BTree_IO_successfulSearch[6];
+		SummaryStatistics BTree_IO_unfavorableSearch[6];
+		SummaryStatistics BTree_IO_deleting[5];
+		SummaryStatistics BTree_IO_erased = new SummaryStatistics();
+		SummaryStatistics ExtHash_IO_insert[6];
+		SummaryStatistics ExtHash_IO_successfulSearch[6];
+		SummaryStatistics ExtHash_IO_unfavorableSearch[6];
+		SummaryStatistics ExtHash_IO_deleting[5];
+		SummaryStatistics ExtHash_IO_erased = new SummaryStatistics();
+		SummaryStatistics LinHashV1_IO_insert[6];
+		SummaryStatistics LinHashV1_IO_successfulSearch[6];
+		SummaryStatistics LinHashV1_IO_unfavorableSearch[6];
+		SummaryStatistics LinHashV1_IO_deleting[5];
+		SummaryStatistics LinHashV1_IO_erased = new SummaryStatistics();
+		SummaryStatistics LinHashV2_IO_insert[6];
+		SummaryStatistics LinHashV2_IO_successfulSearch[6];
+		SummaryStatistics LinHashV2_IO_unfavorableSearch[6];
+		SummaryStatistics LinHashV2_IO_deleting[5];
+		SummaryStatistics LinHashV2_IO_erased = new SummaryStatistics();
+		/*SOMEHOW*/
 	
 		// test real DNA
 		if (cmd.hasOption("rd")) {
-			for(int r=0; r<max_it; r++){
-				realDNA = init("realDNA"+r+".txt");
-				printer.println("Real DNA test "+r);
-				System.err.println("Setting up Real DNA test "+r);
-				DiskMemoryManager btree = new BTree();
-				DiskMemoryManager exthash = new ExtendibleHash();
-				DiskMemoryManager linhashV1 = new LinearHashV1();
-				DiskMemoryManager linhashV2 = new LinearHashV2();
-				BTreeOcc = new SummaryStatistics();
-				BTreeOps = new SummaryStatistics();
-				ExtHOcc = new SummaryStatistics();
-				ExtHOps = new SummaryStatistics();
-				LinH1Occ = new SummaryStatistics();
-				LinH1Ops = new SummaryStatistics();
-				LinH2Occ = new SummaryStatistics();
-				LinH2Ops = new SummaryStatistics();
-				int max = (int)Math.pow(2,20);
-				for(int i=0; i<max; i++){
-					btree.add(realDNA[i]);
-					exthash.add(realDNA[i]);
-					linhashV1.add(realDNA[i]);
-					linhashV2.add(realDNA[i]);
-				}
-				// measure statistics
-				for(int i=l; i<=L; i++){
-					System.err.println("2^"+i);
-					printer.println("2^"+i); 
-
-					for(int iterations=1; true; iterations++){
-						char [] patron = generatePatron(extracted, realDNA, (int)Math.pow(2, i));
-						BFsum.addValue((double)(brute.search(patron)));
-						BFtime.addValue((double)(System.currentTimeMillis() - t));
-						if(iterations%10000 == 0){
-							System.out.println(""+iterations);
-							System.err.println("Resultados realDNA BF");
-							System.err.println("Promedio tiempo: "+(BFtime.getMean()/1000)+" seg.");
-							System.err.println("DEstandar tiempo: "+(BFtime.getStandardDeviation()/1000)+" seg.");
-							System.err.println("Error tiempo: "+((2*BFtime.getStandardDeviation())/
-									Math.sqrt(iterations)*1000)+" seg.");
-							System.err.println("Promedio comps: "+(BFsum.getMean())+" comps.");
-							System.err.println("DEstandar comps: "+(BFsum.getStandardDeviation())+" comps.");
-							System.err.println("Error comps: "+((2*BFsum.getStandardDeviation())/
-									Math.sqrt(iterations))+" comps.");
-						}
-						if(acceptableError(BFsum, iterations) 
-								&& acceptableError(BFtime, iterations) || iterations >= max_it){
-							printer.println("BF Iterations: "+iterations);
-							printer.println("BFtime:\t"+BFtime.getMean()+"\t"+BFtime.getVariance()+"\t"+BFtime.getStandardDeviation());
-							printer.println("BFsum:\t"+BFsum.getMean()+"\t"+BFsum.getVariance()+"\t"+BFsum.getStandardDeviation());
-							break;
-						}
-					}
-					destroy(realDNA);
-				}
+			for(int i=0; i<6; i++){
+				BTree_OccIn[i] = new SummaryStatistics();
+				ExtHash_OccIn[i] = new SummaryStatistics();
+				LinHashV1_OccIn[i] = new SummaryStatistics();
+				LinHashV2_OccIn[i] = new SummaryStatistics();
+				BTree_IO_insert[i] = new SummaryStatistics();
+				BTree_IO_successfulSearch[i] = new SummaryStatistics();
+				BTree_IO_unfavorableSearch[i] = new SummaryStatistics();
+				ExtHash_IO_insert[i] = new SummaryStatistics();
+				ExtHash_IO_successfulSearch[i] = new SummaryStatistics();
+				ExtHash_IO_unfavorableSearch[i] = new SummaryStatistics();
+				LinHashV1_IO_insert[i] = new SummaryStatistics();
+				LinHashV1_IO_successfulSearch[i] = new SummaryStatistics();
+				LinHashV1_IO_unfavorableSearch[i] = new SummaryStatistics();
+				LinHashV2_IO_insert[i] = new SummaryStatistics();
+				LinHashV2_IO_successfulSearch[i] = new SummaryStatistics();
+				LinHashV2_IO_unfavorableSearch[i] = new SummaryStatistics();
 			}
+			for(int i=0; i<5; i++){
+				SummaryStatistics BTree_OccOut[i] = new SummaryStatistics();
+				SummaryStatistics ExtHash_OccOut[i] = new SummaryStatistics();;
+				SummaryStatistics LinHashV1_OccOut[i] = new SummaryStatistics();
+				SummaryStatistics LinHashV2_OccOut[i] = new SummaryStatistics();
+				SummaryStatistics BTree_IO_deleting[i] = new SummaryStatistics();
+				SummaryStatistics ExtHash_IO_deleting[i] = new SummaryStatistics();
+				SummaryStatistics LinHashV1_IO_deleting[i] = new SummaryStatistics();
+				SummaryStatistics LinHashV2_IO_deleting[i] = new SummaryStatistics();
+			}
+			for(int r=0; r<max_it; r++){
+				printer.println("Real DNA test "+r);
+				System.err.print("Setting up Real DNA test "+r);
+				realDNA = init("realDNA"+r+".txt");
+				System.err.print(".");
+				DiskMemoryManager btree = new BTree();
+				System.err.print(".");
+				DiskMemoryManager exthash = new ExtendibleHash();
+				System.err.print(".");
+				DiskMemoryManager linhashV1 = new LinearHashV1();
+				System.err.print(".");
+				DiskMemoryManager linhashV2 = new LinearHashV2();
+				System.err.print(".");
+				int actual=0;
+				int max = 0;
+				System.err.print("Filling >>");
+				for(int i=l; i<=L; i++){
+					System.err.print("2^"+i);
+					max = (int)Math.pow(2,i);
+					for(int j=actual; j<max; j++){
+						btree.add(realDNA[i]);
+						exthash.add(realDNA[i]);
+						linhashV1.add(realDNA[i]);
+						linhashV2.add(realDNA[i]);
+					}
+					System.err.print(".");
+					// measure Occupation
+					actual = max;
+					String [] patron = generateChains(extracted, realDNA, l);
+					for(int iterations=0; iterations<10000; iterations++){
+						btree.find(patron[iterations]);
+						exthash.find(patron[iterations]);
+						linhashV1.find(patron[iterations]);
+						linhashV2.find(patron[iterations]);
+					}
+					System.err.print(".");
+					// measure each 
+					patron = generateChains(random, realDNA, l);
+					for(int iterations=0; iterations<10000; iterations++){
+						btree.find(patron[iterations]);
+						exthash.find(patron[iterations]);
+						linhashV1.find(patron[iterations]);
+						linhashV2.find(patron[iterations]);
+					}
+					System.err.print(".");
+					//measure each
+				}
+				System.err.print("\nErasing >>");
+				actual = (int)Math.pow(2,L);
+				int min = 0;
+
+				List<String> a = Arrays.asList(realDNA);
+				Collections.shuffle(a); // randomize erasing
+				realDNA = (String)a.toArray();
+				
+				System.gc(); // clean old realDNA
+				for(int i=L; i>l; i--){
+					System.err.print("2^"+i+"->2^"+(i-1));
+					min = (int)Math.pow(2,i-1);
+					for(int j=actual-1; j>=min; j--){
+						btree.delete(realDNA[i]);
+						exthash.delete(realDNA[i]);
+						linhashV1.delete(realDNA[i]);
+						linhashV2.delete(realDNA[i]);
+					}
+					System.err.print(".");
+					actual = min;
+					// measure Occupation
+					//measure each
+				}
+				for(int j=actual-1; j>=0; j--){
+					btree.delete(realDNA[i]);
+					exthash.delete(realDNA[i]);
+					linhashV1.delete(realDNA[i]);
+					linhashV2.delete(realDNA[i]);
+				}
+				//measure
+				//end
+				destroy(realDNA);
+				/*	calculate error
+					if reasonable, quit
+				*/
+			}
+			/* print to file */
 		}
 		// test fake DNA
-		if (cmd.hasOption("fd")) {
-			fakeDNA = init("fakeDNA.txt");
-			printer.println("Fake DNA Text");
-			GenericTextSearch brute = new BruteForceSearch(fakeDNA);
-			GenericTextSearch kmp = new KnuthMorrisPrattSearch(fakeDNA);
-			GenericTextSearch bmh = new BoyerMooreHorspoolSearch(fakeDNA);
-			for(int i=l; i<=L; i++){
-				System.err.println("2^"+i);
-				printer.println("2^"+i);
-				BFsum = new SummaryStatistics();
-				BFtime = new SummaryStatistics();
-				KMPsum = new SummaryStatistics();
-				KMPtime = new SummaryStatistics();
-				BMHsum = new SummaryStatistics();
-				BMHtime = new SummaryStatistics();
-				for(int iterations=1; true; iterations++){
-					char [] patron = generatePatron(extracted, 
-							fakeDNA, (int)Math.pow(2, i));
-					t = System.currentTimeMillis();
-					BFsum.addValue((double)(brute.search(patron)));
-					BFtime.addValue((double)(System.currentTimeMillis() - t));
-					if(iterations%10000 == 0){
-						System.out.println(""+iterations);
-						System.err.println("Resultados fakeDNA BF");
-						System.err.println("Promedio tiempo: "+(BFtime.getMean()/1000)+" seg.");
-						System.err.println("DEstandar tiempo: "+(BFtime.getStandardDeviation()/1000)+" seg.");
-						System.err.println("Error tiempo: "+((2*BFtime.getStandardDeviation())/
-								Math.sqrt(iterations)*1000)+" seg.");
-						System.err.println("Promedio comps: "+(BFsum.getMean())+" comps.");
-						System.err.println("DEstandar comps: "+(BFsum.getStandardDeviation())+" comps.");
-						System.err.println("Error comps: "+((2*BFsum.getStandardDeviation())/
-								Math.sqrt(iterations))+" comps.");
-					}
-					if(acceptableError(BFsum, iterations) 
-							&& acceptableError(BFtime, iterations) || iterations >= max_it){
-						printer.println("BF Iterations: "+iterations);
-						printer.println("BFtime:\t"+BFtime.getMean()+"\t"+BFtime.getVariance()+"\t"+BFtime.getStandardDeviation());
-						printer.println("BFsum:\t"+BFsum.getMean()+"\t"+BFsum.getVariance()+"\t"+BFsum.getStandardDeviation());
-						break;
-					}
-				}
-				for(int iterations=1; true; iterations++){
-					char [] patron = generatePatron(extracted, 
-							fakeDNA, (int)Math.pow(2, i));
-					t = System.currentTimeMillis();
-					KMPsum.addValue((double)(kmp.search(patron)));
-					KMPtime.addValue((double)(System.currentTimeMillis() - t));
-					if(iterations%10000 == 0){
-						System.out.println(""+iterations);
-						System.err.println("Resultados fakeDNA KMP");
-						System.err.println("Promedio tiempo: "+(KMPtime.getMean()/1000)+" seg.");
-						System.err.println("DEstandar tiempo: "+(KMPtime.getStandardDeviation()/1000)+" seg.");
-						System.err.println("Error tiempo: "+((2*KMPtime.getStandardDeviation())/
-								Math.sqrt(iterations)*1000)+" seg.");
-						System.err.println("Promedio comps: "+(KMPsum.getMean())+" comps.");
-						System.err.println("DEstandar comps: "+(KMPsum.getStandardDeviation())+" comps.");
-						System.err.println("Error comps: "+((2*KMPsum.getStandardDeviation())/
-								Math.sqrt(iterations))+" comps.");
-					}
-					if(acceptableError(KMPsum, iterations) 
-							&& acceptableError(KMPtime, iterations) || iterations >= max_it){
-						printer.println("KMP Iterations: "+iterations);
-						printer.println("KMPtime:\t"+KMPtime.getMean()+"\t"+KMPtime.getVariance()+"\t"+KMPtime.getStandardDeviation());
-						printer.println("KMPsum:\t"+KMPsum.getMean()+"\t"+KMPsum.getVariance()+"\t"+KMPsum.getStandardDeviation());
-						break;
-					}
-				}
-				for(int iterations=1; true; iterations++){
-					char [] patron = generatePatron(extracted, 
-							fakeDNA, (int)Math.pow(2, i));
-					t = System.currentTimeMillis();
-					BMHsum.addValue((double)(bmh.search(patron)));
-					BMHtime.addValue((double)(System.currentTimeMillis() - t));
-					if(iterations%10000 == 0){
-						System.out.println(""+iterations);
-						System.err.println("Resultados fakeDNA BMH");
-						System.err.println("Promedio tiempo: "+(BMHtime.getMean()/1000)+" seg.");
-						System.err.println("DEstandar tiempo: "+(BMHtime.getStandardDeviation()/1000)+" seg.");
-						System.err.println("Error tiempo: "+((2*BMHtime.getStandardDeviation())/
-								Math.sqrt(iterations)*1000)+" seg.");
-						System.err.println("Promedio comps: "+(BMHsum.getMean())+" comps.");
-						System.err.println("DEstandar comps: "+(BMHsum.getStandardDeviation())+" comps.");
-						System.err.println("Error comps: "+((2*BMHsum.getStandardDeviation())/
-								Math.sqrt(iterations))+" comps.");
-					}
-					if(acceptableError(BMHsum, iterations) 
-							&& acceptableError(BMHtime, iterations) || iterations >= max_it){
-						printer.println("BMH Iterations: "+iterations);
-						printer.println("BMHtime:\t"+BMHtime.getMean()+"\t"+BMHtime.getVariance()+"\t"+BMHtime.getStandardDeviation());
-						printer.println("BMHsum:\t"+BMHsum.getMean()+"\t"+BMHsum.getVariance()+"\t"+BMHsum.getStandardDeviation());
-						break;
-					}
-				}
+		if (cmd.hasOption("fd")){
+			for(int i=0; i<6; i++){
+				BTree_OccIn[i] = new SummaryStatistics();
+				ExtHash_OccIn[i] = new SummaryStatistics();
+				LinHashV1_OccIn[i] = new SummaryStatistics();
+				LinHashV2_OccIn[i] = new SummaryStatistics();
+				BTree_IO_insert[i] = new SummaryStatistics();
+				BTree_IO_successfulSearch[i] = new SummaryStatistics();
+				BTree_IO_unfavorableSearch[i] = new SummaryStatistics();
+				ExtHash_IO_insert[i] = new SummaryStatistics();
+				ExtHash_IO_successfulSearch[i] = new SummaryStatistics();
+				ExtHash_IO_unfavorableSearch[i] = new SummaryStatistics();
+				LinHashV1_IO_insert[i] = new SummaryStatistics();
+				LinHashV1_IO_successfulSearch[i] = new SummaryStatistics();
+				LinHashV1_IO_unfavorableSearch[i] = new SummaryStatistics();
+				LinHashV2_IO_insert[i] = new SummaryStatistics();
+				LinHashV2_IO_successfulSearch[i] = new SummaryStatistics();
+				LinHashV2_IO_unfavorableSearch[i] = new SummaryStatistics();
 			}
-			destroy(fakeDNA);
+			for(int i=0; i<5; i++){
+				BTree_OccOut[i] = new SummaryStatistics();
+				ExtHash_OccOut[i] = new SummaryStatistics();;
+				LinHashV1_OccOut[i] = new SummaryStatistics();
+				LinHashV2_OccOut[i] = new SummaryStatistics();
+				BTree_IO_deleting[i] = new SummaryStatistics();
+				ExtHash_IO_deleting[i] = new SummaryStatistics();
+				LinHashV1_IO_deleting[i] = new SummaryStatistics();
+				LinHashV2_IO_deleting[i] = new SummaryStatistics();
+			}
+			for(int r=0; r<max_it; r++){
+				printer.println("Fake DNA test "+r);
+				System.err.print("Setting up Fake DNA test "+r);
+				realDNA = init("fakeDNA"+r+".txt");
+				System.err.print(".");
+				DiskMemoryManager btree = new BTree();
+				System.err.print(".");
+				DiskMemoryManager exthash = new ExtendibleHash();
+				System.err.print(".");
+				DiskMemoryManager linhashV1 = new LinearHashV1();
+				System.err.print(".");
+				DiskMemoryManager linhashV2 = new LinearHashV2();
+				System.err.print(".");
+				int actual=0;
+				int max = 0;
+				System.err.print("Filling >>");
+				for(int i=l; i<=L; i++){
+					System.err.print("2^"+i);
+					max = (int)Math.pow(2,i);
+					for(int j=actual; j<max; j++){
+						btree.add(fakeDNA[i]);
+						exthash.add(fakeDNA[i]);
+						linhashV1.add(fakeDNA[i]);
+						linhashV2.add(fakeDNA[i]);
+					}
+					System.err.print(".");
+					// measure Occupation
+					actual = max;
+					String [] patron = generateChains(extracted, fakeDNA, l);
+					for(int iterations=0; iterations<10000; iterations++){
+						btree.find(patron[iterations]);
+						exthash.find(patron[iterations]);
+						linhashV1.find(patron[iterations]);
+						linhashV2.find(patron[iterations]);
+					}
+					System.err.print(".");
+					// measure each 
+					patron = generateChains(random, fakeDNA, l);
+					for(int iterations=0; iterations<10000; iterations++){
+						btree.find(patron[iterations]);
+						exthash.find(patron[iterations]);
+						linhashV1.find(patron[iterations]);
+						linhashV2.find(patron[iterations]);
+					}
+					System.err.print(".");
+					//measure each
+				}
+				System.err.print("\nErasing >>");
+				actual = (int)Math.pow(2,L);
+				int min = 0;
+
+				List<String> a = Arrays.asList(fakeDNA);
+				Collections.shuffle(a); // randomize erasing
+				fakeDNA = (String)a.toArray();
+				
+				System.gc(); // clean old realDNA
+				for(int i=L; i>l; i--){
+					System.err.print("2^"+i+"->2^"+(i-1));
+					min = (int)Math.pow(2,i-1);
+					for(int j=actual-1; j>=min; j--){
+						btree.delete(fakeDNA[i]);
+						exthash.delete(fakeDNA[i]);
+						linhashV1.delete(fakeDNA[i]);
+						linhashV2.delete(fakeDNA[i]);
+					}
+					System.err.print(".");
+					actual = min;
+					// measure Occupation
+					//measure each
+				}
+				for(int j=actual-1; j>=0; j--){
+					btree.delete(fakeDNA[i]);
+					exthash.delete(fakeDNA[i]);
+					linhashV1.delete(fakeDNA[i]);
+					linhashV2.delete(fakeDNA[i]);
+				}
+				//measure
+				//end
+				destroy(fakeDNA);
+				/*	calculate error
+					if reasonable, quit
+				*/
+			}
+			/* print to file */
 		}
 	}
 }
+

@@ -145,6 +145,14 @@ public class Main {
 			Luego de borrar entre i e i-1
 		Luego de borrar todo
 		*/
+		int bhelper_low = 0,
+			bhelper_high = 0,
+			exthelper_low = 0,
+			exthelper_high = 0,
+			lin1helper_low = 0,
+			lin1helper_high = 0,
+			lin2helper_low = 0,
+			lin2helper_high = 0;
 		SummaryStatistics BTree_IO_insert[6];
 		SummaryStatistics BTree_IO_successfulSearch[6];
 		SummaryStatistics BTree_IO_unfavorableSearch[6];
@@ -188,14 +196,14 @@ public class Main {
 				LinHashV2_IO_unfavorableSearch[i] = new SummaryStatistics();
 			}
 			for(int i=0; i<5; i++){
-				SummaryStatistics BTree_OccOut[i] = new SummaryStatistics();
-				SummaryStatistics ExtHash_OccOut[i] = new SummaryStatistics();;
-				SummaryStatistics LinHashV1_OccOut[i] = new SummaryStatistics();
-				SummaryStatistics LinHashV2_OccOut[i] = new SummaryStatistics();
-				SummaryStatistics BTree_IO_deleting[i] = new SummaryStatistics();
-				SummaryStatistics ExtHash_IO_deleting[i] = new SummaryStatistics();
-				SummaryStatistics LinHashV1_IO_deleting[i] = new SummaryStatistics();
-				SummaryStatistics LinHashV2_IO_deleting[i] = new SummaryStatistics();
+				BTree_OccOut[i] = new SummaryStatistics();
+				ExtHash_OccOut[i] = new SummaryStatistics();;
+				LinHashV1_OccOut[i] = new SummaryStatistics();
+				LinHashV2_OccOut[i] = new SummaryStatistics();
+				BTree_IO_deleting[i] = new SummaryStatistics();
+				ExtHash_IO_deleting[i] = new SummaryStatistics();
+				LinHashV1_IO_deleting[i] = new SummaryStatistics();
+				LinHashV2_IO_deleting[i] = new SummaryStatistics();
 			}
 			for(int r=0; r<max_it; r++){
 				printer.println("Real DNA test "+r);
@@ -224,6 +232,10 @@ public class Main {
 					}
 					System.err.print(".");
 					// measure Occupation
+					BTree_OccIn[i-20].addValue(btree.getOccupation());
+					ExtHash_OccIn[i-20].addValue(exthash.getOccupation());
+					LinHashV1_OccIn[i-20].addValue(linhashV1.getOccupation());
+					LinHashV2_OccIn[i-20].addValue(linhashV2.getOccupation());
 					actual = max;
 					String [] patron = generateChains(extracted, realDNA, l);
 					for(int iterations=0; iterations<10000; iterations++){
@@ -254,7 +266,7 @@ public class Main {
 				
 				System.gc(); // clean old realDNA
 				for(int i=L; i>l; i--){
-					System.err.print("2^"+i+"->2^"+(i-1));
+					System.err.print("2^"+i+"->2^"+(i-1)+" >> ");
 					min = (int)Math.pow(2,i-1);
 					for(int j=actual-1; j>=min; j--){
 						btree.delete(realDNA[i]);
@@ -265,8 +277,16 @@ public class Main {
 					System.err.print(".");
 					actual = min;
 					// measure Occupation
+					BTree_OccOut[i-21].addValue(btree.getOccupation());
+					ExtHash_OccOut[i-21].addValue(exthash.getOccupation());
+					LinHashV1_OccOut[i-21].addValue(linhashV1.getOccupation());
+					LinHashV2_OccOut[i-21].addValue(linhashV2.getOccupation());
 					//measure each
 				}
+				btree.resetIOs();
+				exthash.resetIOs();
+				linhashV1.resetIOs();
+				linhashV2.resetIOs();
 				for(int j=actual-1; j>=0; j--){
 					btree.delete(realDNA[i]);
 					exthash.delete(realDNA[i]);
@@ -274,6 +294,10 @@ public class Main {
 					linhashV2.delete(realDNA[i]);
 				}
 				//measure
+				BTree_IO_erased.addValue(btree.getIOs());
+				ExtHash_IO_erased.addValue(exthash.getIOs());
+				LinHashV1_IO_erased.addValue(linhashV1.getIOs());
+				LinHashV2_IO_erased.addValue(linhashV2.getIOs());
 				//end
 				destroy(realDNA);
 				/*	calculate error
@@ -328,6 +352,12 @@ public class Main {
 				int actual=0;
 				int max = 0;
 				System.err.print("Filling >>");
+				
+				btree.resetIOs();
+				exthash.resetIOs();
+				linhashV1.resetIOs();
+				linhashV2.resetIOs();
+
 				for(int i=l; i<=L; i++){
 					System.err.print("2^"+i);
 					max = (int)Math.pow(2,i);
@@ -339,8 +369,18 @@ public class Main {
 					}
 					System.err.print(".");
 					// measure Occupation
+					BTree_OccIn[i-20].addValue(btree.getOccupation());
+					ExtHash_OccIn[i-20].addValue(exthash.getOccupation());
+					LinHashV1_OccIn[i-20].addValue(linhashV1.getOccupation());
+					LinHashV2_OccIn[i-20].addValue(linhashV2.getOccupation());
 					actual = max;
 					String [] patron = generateChains(extracted, fakeDNA, l);
+
+
+					btree.resetIOs();
+					exthash.resetIOs();
+					linhashV1.resetIOs();
+					linhashV2.resetIOs();
 					for(int iterations=0; iterations<10000; iterations++){
 						btree.find(patron[iterations]);
 						exthash.find(patron[iterations]);
@@ -350,6 +390,12 @@ public class Main {
 					System.err.print(".");
 					// measure each 
 					patron = generateChains(random, fakeDNA, l);
+
+
+					btree.resetIOs();
+					exthash.resetIOs();
+					linhashV1.resetIOs();
+					linhashV2.resetIOs();
 					for(int iterations=0; iterations<10000; iterations++){
 						btree.find(patron[iterations]);
 						exthash.find(patron[iterations]);
@@ -369,19 +415,32 @@ public class Main {
 				
 				System.gc(); // clean old realDNA
 				for(int i=L; i>l; i--){
-					System.err.print("2^"+i+"->2^"+(i-1));
+					System.err.print("2^"+i+"->2^"+(i-1)+" >> ");
 					min = (int)Math.pow(2,i-1);
+
+					btree.resetIOs();
+					exthash.resetIOs();
+					linhashV1.resetIOs();
+					linhashV2.resetIOs();
 					for(int j=actual-1; j>=min; j--){
 						btree.delete(fakeDNA[i]);
 						exthash.delete(fakeDNA[i]);
 						linhashV1.delete(fakeDNA[i]);
 						linhashV2.delete(fakeDNA[i]);
 					}
+					// measure Occupation
+					BTree_OccOut[i-21].addValue(btree.getOccupation());
+					ExtHash_OccOut[i-21].addValue(exthash.getOccupation());
+					LinHashV1_OccOut[i-21].addValue(linhashV1.getOccupation());
+					LinHashV2_OccOut[i-21].addValue(linhashV2.getOccupation());
 					System.err.print(".");
 					actual = min;
-					// measure Occupation
 					//measure each
 				}
+				btree.resetIOs();
+				exthash.resetIOs();
+				linhashV1.resetIOs();
+				linhashV2.resetIOs();
 				for(int j=actual-1; j>=0; j--){
 					btree.delete(fakeDNA[i]);
 					exthash.delete(fakeDNA[i]);
@@ -389,6 +448,10 @@ public class Main {
 					linhashV2.delete(fakeDNA[i]);
 				}
 				//measure
+				BTree_IO_erased.addValue(btree.getIOs());
+				ExtHash_IO_erased.addValue(exthash.getIOs());
+				LinHashV1_IO_erased.addValue(linhashV1.getIOs());
+				LinHashV2_IO_erased.addValue(linhashV2.getIOs());
 				//end
 				destroy(fakeDNA);
 				/*	calculate error

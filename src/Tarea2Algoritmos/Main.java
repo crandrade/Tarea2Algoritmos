@@ -26,8 +26,8 @@ public class Main {
 	static protected String[] realDNA;
 	static protected String[] fakeDNA;
 	
-	static public String[] init(String filename) throws FileNotFoundException{
-		int i = (int)Math.pow(2, 25);
+	static public String[] init(String filename, int k) throws FileNotFoundException{
+		int i = (int)Math.pow(2, k);
 		String line [] = new String[i];
 		File file = new File(filename);
 		@SuppressWarnings("resource")
@@ -115,13 +115,23 @@ public class Main {
 		File fDir = new File(dir);
 		PrintWriter printer = new PrintWriter(new FileWriter(fDir,true));
 		
-		int l=20; // minimal measure
+		int l=10; // minimal measure
 		int L=25; // maximal measure
 		int max_it=100;
 		if (cmd.hasOption("iterations")) {
 			int nn = Integer.parseInt(cmd.getOptionValue(iter.getOpt()));
 			if(nn>=1 && nn<=10000)
 			max_it=nn;
+		}
+		if (cmd.hasOption("i")) {
+			int nn = Integer.parseInt(cmd.getOptionValue(iter.getOpt()));
+			if(nn>=10 && nn<=25)
+			l=nn;
+		}
+		if (cmd.hasOption("I")) {
+			int nn = Integer.parseInt(cmd.getOptionValue(iter.getOpt()));
+			if(nn>=l && nn<=25)
+			L=nn;
 		}
 		boolean random = false;
 		boolean extracted = true;
@@ -213,7 +223,7 @@ public class Main {
 			for(int r=0; r<max_it; r++){
 				printer.println("Real DNA test "+r);
 				System.err.print("Setting up Real DNA test "+r);
-				realDNA = init("realDNA"+r+".txt");
+				realDNA = init("realDNA"+r+".txt", L);
 				System.err.print(".");
 				DiskMemoryManager btree = new DummyBTree();
 				System.err.print(".");
@@ -503,7 +513,7 @@ public class Main {
 			for(int r=0; r<max_it; r++){
 				printer.println("Fake DNA test "+r);
 				System.err.print("Setting up Fake DNA test "+r);
-				fakeDNA = init("fakeDNA"+r+".txt");
+				fakeDNA = init("fakeDNA"+r+".txt", L);
 				System.err.print(".");
 				DiskMemoryManager btree = new DummyBTree();
 				System.err.print(".");

@@ -121,7 +121,6 @@ public class Main {
 		}
 		boolean random = false;
 		boolean extracted = true;
-		long t=0;
 		/*
 		Medir Ocupación:
 		Al entrar 2^20, 2^21, 2^22, 2^23, 2^24, 2^25

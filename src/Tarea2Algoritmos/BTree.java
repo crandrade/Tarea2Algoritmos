@@ -10,6 +10,17 @@ public class BTree implements DiskMemoryManager{
 	private LinkedList<BTree> hijos;
 	private BTree padre;
 	
+	public BTree() throws IOException{
+		try {
+			dSimulator = new DiskSimulator();
+		} catch (IOException e) {
+			System.out.println("Linear Hash File Not found" +  e.toString());
+		}
+		this.diskPage = dSimulator.getNextFreePage();
+		this.hijos = new LinkedList<>();
+		this.padre = null;
+	}
+	
 	public BTree(DiskSimulator dSimulator, BTree padre) {
 		this.dSimulator = dSimulator;
 		this.diskPage = dSimulator.getNextFreePage();

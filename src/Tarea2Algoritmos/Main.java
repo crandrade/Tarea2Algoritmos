@@ -230,10 +230,10 @@ public class Main {
 					System.err.print("2^"+i);
 					max = (int)Math.pow(2,i);
 					for(int j=actual; j<max; j++){
-						btree.add(realDNA[i]);
-						exthash.add(realDNA[i]);
-						linhashV1.add(realDNA[i]);
-						linhashV2.add(realDNA[i]);
+						btree.add(realDNA[j]);
+						exthash.add(realDNA[j]);
+						linhashV1.add(realDNA[j]);
+						linhashV2.add(realDNA[j]);
 					}
 					System.err.print(".");
 					// measure Occupation
@@ -317,10 +317,10 @@ public class Main {
 					System.err.print("2^"+i+"->2^"+(i-1)+" >> ");
 					min = (int)Math.pow(2,i-1);
 					for(int j=actual-1; j>=min; j--){
-						btree.delete(realDNA[i]);
-						exthash.delete(realDNA[i]);
-						linhashV1.delete(realDNA[i]);
-						linhashV2.delete(realDNA[i]);
+						btree.delete(realDNA[j]);
+						exthash.delete(realDNA[j]);
+						linhashV1.delete(realDNA[j]);
+						linhashV2.delete(realDNA[j]);
 					}
 					System.err.print(".");
 					actual = min;
@@ -520,10 +520,10 @@ public class Main {
 					System.err.print("2^"+i);
 					max = (int)Math.pow(2,i);
 					for(int j=actual; j<max; j++){
-						btree.add(fakeDNA[i]);
-						exthash.add(fakeDNA[i]);
-						linhashV1.add(fakeDNA[i]);
-						linhashV2.add(fakeDNA[i]);
+						btree.add(fakeDNA[j]);
+						exthash.add(fakeDNA[j]);
+						linhashV1.add(fakeDNA[j]);
+						linhashV2.add(fakeDNA[j]);
 					}
 					System.err.print(".");
 					// measure Occupation

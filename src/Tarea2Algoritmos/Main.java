@@ -666,109 +666,110 @@ public class Main {
 				/*	calculate error
 					if reasonable, quit
 				*/
+				double R = Math.sqrt(r+1); 
 				printer.println("Occupation In");
 				for(int k=0; k<6; k++){
 					printer.println(r+"\t"+"BTree_OccIn(2^"+(k+l)+")"+"\t"+BTree_OccIn[k].getMean() +"\t"
 							+BTree_OccIn[k].getStandardDeviation()+"\t"
-							+(2*BTree_OccIn[k].getStandardDeviation()/(Math.sqrt(r)*BTree_OccIn[k].getMean())));
+							+(2*BTree_OccIn[k].getStandardDeviation()/(R*BTree_OccIn[k].getMean())));
 					printer.println(r+"\t"+"ExtHash_OccIn(2^"+(k+l)+")"+"\t"+ExtHash_OccIn[k].getMean() +"\t"
 							+ExtHash_OccIn[k].getStandardDeviation()+"\t"
-							+(2*ExtHash_OccIn[k].getStandardDeviation()/(Math.sqrt(r)*ExtHash_OccIn[k].getMean())));
+							+(2*ExtHash_OccIn[k].getStandardDeviation()/(R*ExtHash_OccIn[k].getMean())));
 					printer.println(r+"\t"+"LinHashV1_OccIn(2^"+(k+l)+")"+"\t"+LinHashV1_OccIn[k].getMean() +"\t"
 							+LinHashV1_OccIn[k].getStandardDeviation()+"\t"
-							+(2*LinHashV1_OccIn[k].getStandardDeviation()/(Math.sqrt(r)*LinHashV1_OccIn[k].getMean())));
+							+(2*LinHashV1_OccIn[k].getStandardDeviation()/(R*LinHashV1_OccIn[k].getMean())));
 					printer.println(r+"\t"+"LinHashV2_OccIn(2^"+(k+l)+")"+"\t"+LinHashV2_OccIn[k].getMean() +"\t"
 							+LinHashV2_OccIn[k].getStandardDeviation()+"\t"
-							+(2*LinHashV2_OccIn[k].getStandardDeviation()/(Math.sqrt(r)*LinHashV2_OccIn[k].getMean())));
+							+(2*LinHashV2_OccIn[k].getStandardDeviation()/(R*LinHashV2_OccIn[k].getMean())));
 				}
 				printer.println("Occupation Out");
 				// TODO
 				for(int k=4; k>=0; k--){
 					printer.println(r+"\t"+"BTree_OccOut(2^"+(k+l)+")"+"\t"+BTree_OccIn[k].getMean() +"\t"
 							+BTree_OccOut[k].getStandardDeviation()+"\t"
-							+(2*BTree_OccOut[k].getStandardDeviation()/(Math.sqrt(r)*BTree_OccOut[k].getMean())));
+							+(2*BTree_OccOut[k].getStandardDeviation()/(R*BTree_OccOut[k].getMean())));
 					printer.println(r+"\t"+"ExtHash_OccOut(2^"+(k+l)+")"+"\t"+ExtHash_OccOut[k].getMean() +"\t"
 							+ExtHash_OccOut[k].getStandardDeviation()+"\t"
-							+(2*ExtHash_OccOut[k].getStandardDeviation()/(Math.sqrt(r)*ExtHash_OccOut[k].getMean())));
-					printer.println(r+"\t"+"LinHashV1_OccIn(2^"+(k+l)+")"+"\t"+LinHashV1_OccOut[k].getMean() +"\t"
+							+(2*ExtHash_OccOut[k].getStandardDeviation()/(R*ExtHash_OccOut[k].getMean())));
+					printer.println(r+"\t"+"LinHashV1_OccOut(2^"+(k+l)+")"+"\t"+LinHashV1_OccOut[k].getMean() +"\t"
 							+LinHashV1_OccOut[k].getStandardDeviation()+"\t"
-							+(2*LinHashV1_OccOut[k].getStandardDeviation()/(Math.sqrt(r)*LinHashV1_OccOut[k].getMean())));
-					printer.println(r+"\t"+"LinHashV2_OccIn(2^"+(k+l)+")"+"\t"+LinHashV2_OccOut[k].getMean() +"\t"
+							+(2*LinHashV1_OccOut[k].getStandardDeviation()/(R*LinHashV1_OccOut[k].getMean())));
+					printer.println(r+"\t"+"LinHashV2_OccOut(2^"+(k+l)+")"+"\t"+LinHashV2_OccOut[k].getMean() +"\t"
 							+LinHashV2_OccOut[k].getStandardDeviation()+"\t"
-							+(2*LinHashV2_OccOut[k].getStandardDeviation()/(Math.sqrt(r)*LinHashV2_OccOut[k].getMean())));
+							+(2*LinHashV2_OccOut[k].getStandardDeviation()/(R*LinHashV2_OccOut[k].getMean())));
 				}
 				printer.println("IO in");
 				for(int k=0; k<6; k++){
 					printer.println(r+"\t"+"BTree_IO_insert(2^"+(k+l)+")"+"\t"+BTree_IO_insert[k].getMean() +"\t"
 							+BTree_IO_insert[k].getStandardDeviation()+"\t"
-							+(2*BTree_IO_insert[k].getStandardDeviation()/(Math.sqrt(r)*BTree_IO_insert[k].getMean())));
+							+(2*BTree_IO_insert[k].getStandardDeviation()/(R*BTree_IO_insert[k].getMean())));
 					printer.println(r+"\t"+"ExtHash_IO_insert(2^"+(k+l)+")"+"\t"+ExtHash_IO_insert[k].getMean() +"\t"
 							+ExtHash_IO_insert[k].getStandardDeviation()+"\t"
-							+(2*ExtHash_IO_insert[k].getStandardDeviation()/(Math.sqrt(r)*ExtHash_IO_insert[k].getMean())));
+							+(2*ExtHash_IO_insert[k].getStandardDeviation()/(R*ExtHash_IO_insert[k].getMean())));
 					printer.println(r+"\t"+"LinHashV1_IO_insert(2^"+(k+l)+")"+"\t"+LinHashV1_IO_insert[k].getMean() +"\t"
 							+LinHashV1_IO_insert[k].getStandardDeviation()+"\t"
-							+(2*LinHashV1_IO_insert[k].getStandardDeviation()/(Math.sqrt(r)*LinHashV1_IO_insert[k].getMean())));
+							+(2*LinHashV1_IO_insert[k].getStandardDeviation()/(R*LinHashV1_IO_insert[k].getMean())));
 					printer.println(r+"\t"+"LinHashV2_IO_insert(2^"+(k+l)+")"+"\t"+LinHashV2_IO_insert[k].getMean() +"\t"
 							+LinHashV2_IO_insert[k].getStandardDeviation()+"\t"
-							+(2*LinHashV2_IO_insert[k].getStandardDeviation()/(Math.sqrt(r)*LinHashV2_IO_insert[k].getMean())));
+							+(2*LinHashV2_IO_insert[k].getStandardDeviation()/(R*LinHashV2_IO_insert[k].getMean())));
 				}
 				printer.println("IO out");
 				//TODO
 				for(int k=4; k>=0; k--){
 					printer.println(r+"\t"+"BTree_IO_deleting(2^"+(k+l)+")"+"\t"+BTree_IO_deleting[k].getMean() +"\t"
 							+BTree_IO_deleting[k].getStandardDeviation()+"\t"
-							+(2*BTree_IO_deleting[k].getStandardDeviation()/(Math.sqrt(r)*BTree_IO_deleting[k].getMean())));
+							+(2*BTree_IO_deleting[k].getStandardDeviation()/(R*BTree_IO_deleting[k].getMean())));
 					printer.println(r+"\t"+"ExtHash_IO_deleting(2^"+(k+l)+")"+"\t"+ExtHash_IO_deleting[k].getMean() +"\t"
 							+ExtHash_IO_deleting[k].getStandardDeviation()+"\t"
-							+(2*ExtHash_IO_deleting[k].getStandardDeviation()/(Math.sqrt(r)*ExtHash_IO_deleting[k].getMean())));
+							+(2*ExtHash_IO_deleting[k].getStandardDeviation()/(R*ExtHash_IO_deleting[k].getMean())));
 					printer.println(r+"\t"+"LinHashV1_IO_deleting(2^"+(k+l)+")"+"\t"+LinHashV1_IO_deleting[k].getMean() +"\t"
 							+LinHashV1_IO_deleting[k].getStandardDeviation()+"\t"
-							+(2*LinHashV1_IO_deleting[k].getStandardDeviation()/(Math.sqrt(r)*LinHashV1_IO_deleting[k].getMean())));
+							+(2*LinHashV1_IO_deleting[k].getStandardDeviation()/(R*LinHashV1_IO_deleting[k].getMean())));
 					printer.println(r+"\t"+"LinHashV2_IO_deleting(2^"+(k+l)+")"+"\t"+LinHashV2_IO_deleting[k].getMean() +"\t"
 							+LinHashV2_IO_deleting[k].getStandardDeviation()+"\t"
-							+(2*LinHashV2_IO_deleting[k].getStandardDeviation()/(Math.sqrt(r)*LinHashV2_IO_deleting[k].getMean())));
+							+(2*LinHashV2_IO_deleting[k].getStandardDeviation()/(R*LinHashV2_IO_deleting[k].getMean())));
 				}
 				printer.println(r+"\t"+"BTree_IO_erased"+"\t"+BTree_IO_erased.getMean() +"\t"
 						+BTree_IO_erased.getStandardDeviation()+"\t"
-						+(2*BTree_IO_erased.getStandardDeviation()/(Math.sqrt(r)*BTree_IO_erased.getMean())));
+						+(2*BTree_IO_erased.getStandardDeviation()/(R*BTree_IO_erased.getMean())));
 				printer.println(r+"\t"+"ExtHash_IO_erased"+"\t"+ExtHash_IO_erased.getMean() +"\t"
 						+ExtHash_IO_erased.getStandardDeviation()+"\t"
-						+(2*ExtHash_IO_erased.getStandardDeviation()/(Math.sqrt(r)*ExtHash_IO_erased.getMean())));
+						+(2*ExtHash_IO_erased.getStandardDeviation()/(R*ExtHash_IO_erased.getMean())));
 				printer.println(r+"\t"+"LinHashV1_IO_erased"+"\t"+LinHashV1_IO_erased.getMean() +"\t"
 						+LinHashV1_IO_erased.getStandardDeviation()+"\t"
-						+(2*LinHashV1_IO_erased.getStandardDeviation()/(Math.sqrt(r)*LinHashV1_IO_erased.getMean())));
+						+(2*LinHashV1_IO_erased.getStandardDeviation()/(R*LinHashV1_IO_erased.getMean())));
 				printer.println(r+"\t"+"LinHashV2_IO_erased"+"\t"+LinHashV2_IO_erased.getMean() +"\t"
 						+LinHashV2_IO_erased.getStandardDeviation()+"\t"
-						+(2*LinHashV2_IO_erased.getStandardDeviation()/(Math.sqrt(r)*LinHashV2_IO_erased.getMean())));
+						+(2*LinHashV2_IO_erased.getStandardDeviation()/(R*LinHashV2_IO_erased.getMean())));
 				printer.println("IO successful search");
 				for(int k=0; k<6; k++){
-					printer.println(r+"\t"+"BTree_IO_insert(2^"+(k+l)+")"+"\t"+BTree_IO_insert[k].getMean() +"\t"
-							+BTree_IO_insert[k].getStandardDeviation()+"\t"
-							+(2*BTree_IO_insert[k].getStandardDeviation()/(Math.sqrt(r)*BTree_IO_insert[k].getMean())));
-					printer.println(r+"\t"+"ExtHash_IO_insert(2^"+(k+l)+")"+"\t"+ExtHash_IO_insert[k].getMean() +"\t"
-							+ExtHash_IO_insert[k].getStandardDeviation()+"\t"
-							+(2*ExtHash_IO_insert[k].getStandardDeviation()/(Math.sqrt(r)*ExtHash_IO_insert[k].getMean())));
-					printer.println(r+"\t"+"LinHashV1_IO_insert(2^"+(k+l)+")"+"\t"+LinHashV1_IO_insert[k].getMean() +"\t"
-							+LinHashV1_IO_insert[k].getStandardDeviation()+"\t"
-							+(2*LinHashV1_IO_insert[k].getStandardDeviation()/(Math.sqrt(r)*LinHashV1_IO_insert[k].getMean())));
-					printer.println(r+"\t"+"LinHashV2_IO_insert(2^"+(k+l)+")"+"\t"+LinHashV2_IO_insert[k].getMean() +"\t"
-							+LinHashV2_IO_insert[k].getStandardDeviation()+"\t"
-							+(2*LinHashV2_IO_insert[k].getStandardDeviation()/(Math.sqrt(r)*LinHashV2_IO_insert[k].getMean())));
+					printer.println(r+"\t"+"BTree_IO_successfulSearch(2^"+(k+l)+")"+"\t"+BTree_IO_successfulSearch[k].getMean() +"\t"
+							+BTree_IO_successfulSearch[k].getStandardDeviation()+"\t"
+							+(2*BTree_IO_successfulSearch[k].getStandardDeviation()/(R*BTree_IO_successfulSearch[k].getMean())));
+					printer.println(r+"\t"+"ExtHash_IO_successfulSearch(2^"+(k+l)+")"+"\t"+ExtHash_IO_successfulSearch[k].getMean() +"\t"
+							+ExtHash_IO_successfulSearch[k].getStandardDeviation()+"\t"
+							+(2*ExtHash_IO_successfulSearch[k].getStandardDeviation()/(R*ExtHash_IO_successfulSearch[k].getMean())));
+					printer.println(r+"\t"+"LinHashV1_IO_insert(2^"+(k+l)+")"+"\t"+LinHashV1_IO_successfulSearch[k].getMean() +"\t"
+							+LinHashV1_IO_successfulSearch[k].getStandardDeviation()+"\t"
+							+(2*LinHashV1_IO_successfulSearch[k].getStandardDeviation()/(R*LinHashV1_IO_successfulSearch[k].getMean())));
+					printer.println(r+"\t"+"LinHashV2_IO_insert(2^"+(k+l)+")"+"\t"+LinHashV2_IO_successfulSearch[k].getMean() +"\t"
+							+LinHashV2_IO_successfulSearch[k].getStandardDeviation()+"\t"
+							+(2*LinHashV2_IO_successfulSearch[k].getStandardDeviation()/(R*LinHashV2_IO_successfulSearch[k].getMean())));
 				}
 				printer.println("IO unfavorable search");
 				for(int k=0; k<6; k++){
 					printer.println(r+"\t"+"BTree_IO_unfavorableSearch(2^"+(k+l)+")"+"\t"+BTree_IO_unfavorableSearch[k].getMean() +"\t"
 							+BTree_IO_unfavorableSearch[k].getStandardDeviation()+"\t"
-							+(2*BTree_IO_unfavorableSearch[k].getStandardDeviation()/(Math.sqrt(r)*BTree_IO_unfavorableSearch[k].getMean())));
+							+(2*BTree_IO_unfavorableSearch[k].getStandardDeviation()/(R*BTree_IO_unfavorableSearch[k].getMean())));
 					printer.println(r+"\t"+"ExtHash_IO_unfavorableSearch(2^"+(k+l)+")"+"\t"+ExtHash_IO_unfavorableSearch[k].getMean() +"\t"
 							+ExtHash_IO_unfavorableSearch[k].getStandardDeviation()+"\t"
-							+(2*ExtHash_IO_unfavorableSearch[k].getStandardDeviation()/(Math.sqrt(r)*ExtHash_IO_unfavorableSearch[k].getMean())));
+							+(2*ExtHash_IO_unfavorableSearch[k].getStandardDeviation()/(R*ExtHash_IO_unfavorableSearch[k].getMean())));
 					printer.println(r+"\t"+"LinHashV1_IO_unfavorableSearch(2^"+(k+l)+")"+"\t"+LinHashV1_IO_unfavorableSearch[k].getMean() +"\t"
 							+LinHashV1_IO_unfavorableSearch[k].getStandardDeviation()+"\t"
-							+(2*LinHashV1_IO_unfavorableSearch[k].getStandardDeviation()/(Math.sqrt(r)*LinHashV1_IO_unfavorableSearch[k].getMean())));
-					printer.println(r+"\t"+"LinHashV2_IO_insert(2^"+(k+l)+")"+"\t"+LinHashV2_IO_unfavorableSearch[k].getMean() +"\t"
+							+(2*LinHashV1_IO_unfavorableSearch[k].getStandardDeviation()/(R*LinHashV1_IO_unfavorableSearch[k].getMean())));
+					printer.println(r+"\t"+"LinHashV2_IO_unfavorableSearch(2^"+(k+l)+")"+"\t"+LinHashV2_IO_unfavorableSearch[k].getMean() +"\t"
 							+LinHashV2_IO_unfavorableSearch[k].getStandardDeviation()+"\t"
-							+(2*LinHashV2_IO_unfavorableSearch[k].getStandardDeviation()/(Math.sqrt(r)*LinHashV2_IO_unfavorableSearch[k].getMean())));
+							+(2*LinHashV2_IO_unfavorableSearch[k].getStandardDeviation()/(R*LinHashV2_IO_unfavorableSearch[k].getMean())));
 				}
 			}
 			/* print to file */

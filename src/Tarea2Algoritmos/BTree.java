@@ -135,6 +135,7 @@ public class BTree implements DiskMemoryManager{
 	}
 	
 	public void insert(String chain) throws IOException {
+		System.out.println("BTRee Original");
 		boolean willOverflow = Utilitarian.willOverflow(dSimulator.getPage(diskPage), chain.getBytes());
 		LinkedList<String> strings = Utilitarian.allStringsOnBytes(dSimulator.getPage(diskPage));
 		if (!willOverflow) {

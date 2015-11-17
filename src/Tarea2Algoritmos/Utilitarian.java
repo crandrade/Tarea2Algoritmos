@@ -39,7 +39,7 @@ public class Utilitarian {
 			if (mSubString.trim().equals("")) {
 				break;
 			}
-			System.out.println("Expanding: " + mSubString);
+			//System.out.println("Expanding: " + mSubString);
 			allChains.add(mSubString);
 			counter = counter + Utilitarian.CHAIN_SIZE;
 		}

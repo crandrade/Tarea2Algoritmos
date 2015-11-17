@@ -1,5 +1,4 @@
 package Tarea2Algoritmos;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class ExtendibleHash implements DiskMemoryManager {

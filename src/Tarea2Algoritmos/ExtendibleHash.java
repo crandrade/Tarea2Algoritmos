@@ -10,7 +10,7 @@ public class ExtendibleHash implements DiskMemoryManager {
 		try {
 			dSimulator = new DiskSimulator();
 		} catch (IOException e) {
-			System.out.println("Extendible Hash File Not found" +  e.toString());
+			System.err.println("Extendible Hash File Not found" +  e.toString());
 		}
 		myTree = new MyTree(0, 0);
 	}
@@ -36,7 +36,7 @@ public class ExtendibleHash implements DiskMemoryManager {
 			return Utilitarian.searchChainInBytes(chain, pageBytes);
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.out.println("Problema IO Find!");
+			System.err.println("Problema IO Find!");
 		}
 		return null;
 	}
@@ -95,7 +95,7 @@ public class ExtendibleHash implements DiskMemoryManager {
 			
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.out.println("Problema IO Insert!");
+			System.err.println("Problema IO Insert!");
 		}
 	}
 	
@@ -137,7 +137,7 @@ public class ExtendibleHash implements DiskMemoryManager {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.out.println("Problema IO delete");
+			System.err.println("Problema IO delete");
 		}
 		return found;
 	}

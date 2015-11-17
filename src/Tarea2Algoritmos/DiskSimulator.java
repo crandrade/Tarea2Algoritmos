@@ -65,11 +65,11 @@ public class DiskSimulator {
 					}
 				}
 			} catch (IOException e) {
-				System.out.println("Fallamos");
+				//System.out.println("Fallamos");
 				e.printStackTrace();
 			}
 		}
-		System.out.println("Next free page?" + (nextFreePage - 1));
+		//System.out.println("Next free page?" + (nextFreePage - 1));
 		return (ocupationPercentage/(nextFreePage-1));
 	}
 	

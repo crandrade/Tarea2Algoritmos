@@ -44,24 +44,27 @@ public class BTree implements DiskMemoryManager{
 	}
 	
 	public BTree findTreeForChain(String chain) {
-		System.out.println("Finding tree");
+		//System.out.println("Finding tree");
 		BTree toReturn = this;
 		try {
 			LinkedList<String> strings = Utilitarian.allStringsOnBytes(dSimulator.getPage(diskPage));
 			int index = 0;
-			System.out.println("prefor");
+			//System.out.println("prefor");
 			for (String string : strings) {
-				System.out.println("For");
-				System.out.println("String: " + string);
+				//System.out.println("For");
+				//System.out.println("String: " + string);
 				if (string.equals(chain))
 					return this;
 				if (string.compareTo(chain) > 0) {
 					/* Entonces string ya esta mas adelante que el valor que busco */
-					return hijos.get(index).findTreeForChain(chain);
+					if (hijos.size() > 0)
+						return hijos.get(index).findTreeForChain(chain);
+					else
+						return toReturn;
 				}
 				index++;
 			}
-			System.out.println("String: ");
+			//System.out.println("String: ");
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Error buscando tree for chain");
@@ -135,7 +138,7 @@ public class BTree implements DiskMemoryManager{
 	}
 	
 	public void insert(String chain) throws IOException {
-		System.out.println("BTRee Original");
+		//System.out.println("BTRee Original");
 		boolean willOverflow = Utilitarian.willOverflow(dSimulator.getPage(diskPage), chain.getBytes());
 		LinkedList<String> strings = Utilitarian.allStringsOnBytes(dSimulator.getPage(diskPage));
 		if (!willOverflow) {
@@ -174,7 +177,7 @@ public class BTree implements DiskMemoryManager{
 			dSimulator.writePage(diskPage, Utilitarian.stringListToByte(strings));
 			if (padre != null) {
 				// Debo insertar mediana en el padre
-				padre.add(mediana);
+				padre.insert(mediana);
 			} else {
 				// Debo agregar padre e insertar mediana
 				padre = new BTree(dSimulator, null);

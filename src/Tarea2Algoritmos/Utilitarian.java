@@ -37,10 +37,10 @@ public class Utilitarian {
 		int counter = 0;
 		while (counter < haystack.length() - Utilitarian.CHAIN_SIZE) {
 			String mSubString = haystack.substring(counter, counter + Utilitarian.CHAIN_SIZE);
-			System.out.println("Expanding: " + mSubString);
 			if (mSubString.trim().equals("")) {
 				break;
 			}
+			System.out.println("Expanding: " + mSubString);
 			allChains.add(mSubString);
 			counter = counter + Utilitarian.CHAIN_SIZE;
 		}

@@ -44,11 +44,15 @@ public class BTree implements DiskMemoryManager{
 	}
 	
 	public BTree findTreeForChain(String chain) {
+		System.out.println("Finding tree");
 		BTree toReturn = this;
 		try {
 			LinkedList<String> strings = Utilitarian.allStringsOnBytes(dSimulator.getPage(diskPage));
 			int index = 0;
+			System.out.println("prefor");
 			for (String string : strings) {
+				System.out.println("For");
+				System.out.println("String: " + string);
 				if (string.equals(chain))
 					return this;
 				if (string.compareTo(chain) > 0) {
@@ -57,6 +61,7 @@ public class BTree implements DiskMemoryManager{
 				}
 				index++;
 			}
+			System.out.println("String: ");
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Error buscando tree for chain");
@@ -181,7 +186,11 @@ public class BTree implements DiskMemoryManager{
 	@Override
 	public void add(String chain) {
 		BTree bTree = findTreeForChain(chain);
-		bTree.add(chain);
+		try {
+			bTree.insert(chain);
+		} catch (IOException e) {
+			System.out.println("Error inserting btree");
+		}
 			
 	}
 

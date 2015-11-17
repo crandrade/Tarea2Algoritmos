@@ -36,6 +36,9 @@ public class Main {
 		line[j++]= scanner.nextLine();
 		while (scanner.hasNextLine() && j<i) {
 		       line[j++]= scanner.nextLine();
+		       if(j%10000 = 0){
+		    	   System.err.print(",");
+		       }
 		}
 		return line;
 	}

@@ -22,56 +22,9 @@ public class LinearHashV1 implements DiskMemoryManager {
 			System.out.println("Linear Hash File Not found" +  e.toString());
 		}
 		buckets = new LinkedList<>();
-		buckets.add(new Bucket());
+		buckets.add(new Bucket(dSimulator));
 	}
 	
-	
-
-	private class Bucket {
-		
-		LinkedList<Integer> diskPages = new LinkedList<>();
-		
-		public Bucket() {
-			diskPages = new LinkedList<>();
-			diskPages.add(dSimulator.getNextFreePage());
-		}
-		
-		public void insertInBucket(String chain) {
-			try {
-				byte[] pageData = dSimulator.getPage(diskPages.size());
-				boolean success = Utilitarian.readAndInsertAfter0(pageData, chain.getBytes());
-				if (success) {
-					dSimulator.writePage(diskPages.size(), pageData);
-				} else {
-					int nextFreePage = dSimulator.getNextFreePage();
-					diskPages.add(nextFreePage);
-					byte[] rPageData = dSimulator.getPage(nextFreePage);
-					Utilitarian.readAndInsertAfter0(rPageData, chain.getBytes());
-					dSimulator.writePage(nextFreePage, rPageData);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-				System.out.println("Error inserting in bucket");
-			}
-		}
-		
-		public String searchInBucket(String chain) {
-		    for (int diskPage : diskPages) {
-		    	try {
-					byte[] pageData = dSimulator.getPage(diskPage);
-					String result = Utilitarian.searchChainInBytes(chain, pageData);
-					if (result != null)
-						return result;
-				} catch (IOException e) {
-					e.printStackTrace();
-					System.out.println("Error searching in bucket");
-				}
-		    }
-			return null;
-		}
-		
-		
-	}
 	
 	/* No expando a cada operacion, saber el nivel de ocupacion es caro */
 	private void checkMaybeExpand() {
@@ -121,8 +74,11 @@ public class LinearHashV1 implements DiskMemoryManager {
 	@Override
 	public boolean delete(String chain) {
 		/* Cuando borro debo chequear la tasa de ocupacion para contraerme*/
-		// TODO Auto-generated method stub
-		return false;
+		Bucket bToDelete = getBucket(chain);
+		boolean toReturn = bToDelete.deleteInBucket(chain);
+		
+		checkMaybeCompress();
+		return toReturn;
 	}
 
 	@Override

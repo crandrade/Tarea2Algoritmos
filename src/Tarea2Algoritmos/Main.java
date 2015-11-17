@@ -545,6 +545,7 @@ public class Main {
 					ExtHash_OccIn[i-l].addValue(exthash.getOccupation());
 					LinHashV1_OccIn[i-l].addValue(linhashV1.getOccupation());
 					LinHashV2_OccIn[i-l].addValue(linhashV2.getOccupation());
+					System.out.println("Finished ocupation");
 					//measure IO
 					bhelper_high = btree.getIOs();
 					exthelper_high = exthash.getIOs();
@@ -558,15 +559,20 @@ public class Main {
 					exthash.resetIOs();
 					linhashV1.resetIOs();
 					linhashV2.resetIOs();
+					System.out.println("Finish IO");
 					//end measure IO
 					actual = max;
 					//find successful
 					String [] patron = generateChains(extracted, fakeDNA, l);
 					for(int iterations=0; iterations<10000; iterations++){
 						btree.find(patron[iterations]);
+						System.out.print("F1");
 						exthash.find(patron[iterations]);
+						System.out.print("F2");
 						linhashV1.find(patron[iterations]);
+						System.out.print("F3");
 						linhashV2.find(patron[iterations]);
+						System.out.print("F4");
 					}
 					System.err.print(".");
 					// measure IOs
@@ -676,7 +682,8 @@ public class Main {
 							+(2*LinHashV2_OccIn[k].getStandardDeviation()/(Math.sqrt(r)*LinHashV2_OccIn[k].getMean())));
 				}
 				printer.println("Occupation Out");
-				for(int k=4; k>=0; k++){
+				// TODO
+				for(int k=4; k>=0; k--){
 					printer.println(r+"\t"+"BTree_OccOut(2^"+(k+l)+")"+"\t"+BTree_OccIn[k].getMean() +"\t"
 							+BTree_OccOut[k].getStandardDeviation()+"\t"
 							+(2*BTree_OccOut[k].getStandardDeviation()/(Math.sqrt(r)*BTree_OccOut[k].getMean())));
@@ -706,7 +713,8 @@ public class Main {
 							+(2*LinHashV2_IO_insert[k].getStandardDeviation()/(Math.sqrt(r)*LinHashV2_IO_insert[k].getMean())));
 				}
 				printer.println("IO out");
-				for(int k=4; k>=0; k++){
+				//TODO
+				for(int k=4; k>=0; k--){
 					printer.println(r+"\t"+"BTree_IO_deleting(2^"+(k+l)+")"+"\t"+BTree_IO_deleting[k].getMean() +"\t"
 							+BTree_IO_deleting[k].getStandardDeviation()+"\t"
 							+(2*BTree_IO_deleting[k].getStandardDeviation()/(Math.sqrt(r)*BTree_IO_deleting[k].getMean())));

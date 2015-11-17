@@ -29,6 +29,11 @@ public abstract class LinearHash {
 	
 	protected void compress() {
 		/* Compress */
+		// No puedo comprimirme mas que uno
+		System.out.println("Buckets reales " + nBucketsReales);
+		System.out.println("S2 Buckets" + s2BucketsVirtuales);
+		if (nBucketsReales == 2)
+			return;
 		nBucketsReales--;
 		//n <- n-1
 		//agregar la pagina n a la 

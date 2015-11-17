@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -70,8 +72,7 @@ public class Main {
 		else return false;
 	}
 
-	public static void main(String[] args){
-		// TODO Auto-generated method stub
+	public static void main(String[] args) throws IOException{
 		Option iter = new Option("iterations", "Number of iterations");
 		iter.setArgs(1);
 		iter.setRequired(true);
@@ -127,14 +128,14 @@ public class Main {
 		Al salir 2^24, 2^23, 2^22, 2^21, 2^20
 		*/
 
-		SummaryStatistics BTree_OccIn[6];
-		SummaryStatistics BTree_OccOut[5];
-		SummaryStatistics ExtHash_OccIn[6];
-		SummaryStatistics ExtHash_OccOut[5];
-		SummaryStatistics LinHashV1_OccIn[6];
-		SummaryStatistics LinHashV1_OccOut[5];
-		SummaryStatistics LinHashV2_OccIn[6];
-		SummaryStatistics LinHashV2_OccOut[5];
+		SummaryStatistics BTree_OccIn[] = new SummaryStatistics[6];
+		SummaryStatistics BTree_OccOut[] = new SummaryStatistics[5];
+		SummaryStatistics ExtHash_OccIn[] = new SummaryStatistics[6];
+		SummaryStatistics ExtHash_OccOut[] = new SummaryStatistics[5];
+		SummaryStatistics LinHashV1_OccIn[] = new SummaryStatistics[6];
+		SummaryStatistics LinHashV1_OccOut[] = new SummaryStatistics[5];
+		SummaryStatistics LinHashV2_OccIn[] = new SummaryStatistics[6];
+		SummaryStatistics LinHashV2_OccOut[] = new SummaryStatistics[5];
 		
 		/*Medir IO
 		for i in [20, 25]
@@ -145,38 +146,38 @@ public class Main {
 			Luego de borrar entre i e i-1
 		Luego de borrar todo
 		*/
-		int bhelper_low = 0,
-			bhelper_high = 0,
-			exthelper_low = 0,
-			exthelper_high = 0,
-			lin1helper_low = 0,
-			lin1helper_high = 0,
-			lin2helper_low = 0,
-			lin2helper_high = 0;
-		SummaryStatistics BTree_IO_insert[6];
-		SummaryStatistics BTree_IO_successfulSearch[6];
-		SummaryStatistics BTree_IO_unfavorableSearch[6];
-		SummaryStatistics BTree_IO_deleting[5];
-		SummaryStatistics BTree_IO_erased = new SummaryStatistics();
-		SummaryStatistics ExtHash_IO_insert[6];
-		SummaryStatistics ExtHash_IO_successfulSearch[6];
-		SummaryStatistics ExtHash_IO_unfavorableSearch[6];
-		SummaryStatistics ExtHash_IO_deleting[5];
-		SummaryStatistics ExtHash_IO_erased = new SummaryStatistics();
-		SummaryStatistics LinHashV1_IO_insert[6];
-		SummaryStatistics LinHashV1_IO_successfulSearch[6];
-		SummaryStatistics LinHashV1_IO_unfavorableSearch[6];
-		SummaryStatistics LinHashV1_IO_deleting[5];
-		SummaryStatistics LinHashV1_IO_erased = new SummaryStatistics();
-		SummaryStatistics LinHashV2_IO_insert[6];
-		SummaryStatistics LinHashV2_IO_successfulSearch[6];
-		SummaryStatistics LinHashV2_IO_unfavorableSearch[6];
-		SummaryStatistics LinHashV2_IO_deleting[5];
-		SummaryStatistics LinHashV2_IO_erased = new SummaryStatistics();
+		SummaryStatistics BTree_IO_insert[] = new SummaryStatistics[6];
+		SummaryStatistics BTree_IO_successfulSearch[] = new SummaryStatistics[6];
+		SummaryStatistics BTree_IO_unfavorableSearch[] = new SummaryStatistics[6];
+		SummaryStatistics BTree_IO_deleting[] = new SummaryStatistics[5];
+		SummaryStatistics BTree_IO_erased = new SummaryStatistics(); // resetear
+		SummaryStatistics ExtHash_IO_insert[] = new SummaryStatistics[6];
+		SummaryStatistics ExtHash_IO_successfulSearch[] = new SummaryStatistics[65];
+		SummaryStatistics ExtHash_IO_unfavorableSearch[] = new SummaryStatistics[6];
+		SummaryStatistics ExtHash_IO_deleting[] = new SummaryStatistics[5];
+		SummaryStatistics ExtHash_IO_erased = new SummaryStatistics(); // resetear
+		SummaryStatistics LinHashV1_IO_insert[] = new SummaryStatistics[6];
+		SummaryStatistics LinHashV1_IO_successfulSearch[] = new SummaryStatistics[6];
+		SummaryStatistics LinHashV1_IO_unfavorableSearch[] = new SummaryStatistics[6];
+		SummaryStatistics LinHashV1_IO_deleting[] = new SummaryStatistics[5];
+		SummaryStatistics LinHashV1_IO_erased = new SummaryStatistics(); // resetear
+		SummaryStatistics LinHashV2_IO_insert[] = new SummaryStatistics[6];
+		SummaryStatistics LinHashV2_IO_successfulSearch[] = new SummaryStatistics[6];
+		SummaryStatistics LinHashV2_IO_unfavorableSearch[] = new SummaryStatistics[6];
+		SummaryStatistics LinHashV2_IO_deleting[] = new SummaryStatistics[5];
+		SummaryStatistics LinHashV2_IO_erased = new SummaryStatistics(); //resetear
 		/*SOMEHOW*/
 	
 		// test real DNA
 		if (cmd.hasOption("rd")) {
+			int bhelper_low = 0,
+				bhelper_high = 0,
+				exthelper_low = 0,
+				exthelper_high = 0,
+				lin1helper_low = 0,
+				lin1helper_high = 0,
+				lin2helper_low = 0,
+				lin2helper_high = 0;
 			for(int i=0; i<6; i++){
 				BTree_OccIn[i] = new SummaryStatistics();
 				ExtHash_OccIn[i] = new SummaryStatistics();
@@ -220,7 +221,7 @@ public class Main {
 				System.err.print(".");
 				int actual=0;
 				int max = 0;
-				System.err.print("Filling >>");
+				System.err.print("\nFilling >>");
 				for(int i=l; i<=L; i++){
 					System.err.print("2^"+i);
 					max = (int)Math.pow(2,i);
@@ -236,6 +237,20 @@ public class Main {
 					ExtHash_OccIn[i-20].addValue(exthash.getOccupation());
 					LinHashV1_OccIn[i-20].addValue(linhashV1.getOccupation());
 					LinHashV2_OccIn[i-20].addValue(linhashV2.getOccupation());
+					//measure IO
+					bhelper_high = btree.getIOs();
+					exthelper_high = exthash.getIOs();
+					lin1helper_high = linhashV1.getIOs();
+					lin2helper_high = linhashV1.getIOs();
+					BTree_IO_insert[i-20].addValue(bhelper_high + bhelper_low);
+					ExtHash_IO_insert[i-20].addValue(exthelper_high + exthelper_low);
+					LinHashV1_IO_insert[i-20].addValue(lin1helper_high + lin1helper_low);
+					LinHashV2_IO_insert[i-20].addValue(lin2helper_high + lin2helper_low);
+					btree.resetIOs();
+					exthash.resetIOs();
+					linhashV1.resetIOs();
+					linhashV2.resetIOs();
+					//end measure IO
 					actual = max;
 					String [] patron = generateChains(extracted, realDNA, l);
 					for(int iterations=0; iterations<10000; iterations++){
@@ -245,7 +260,16 @@ public class Main {
 						linhashV2.find(patron[iterations]);
 					}
 					System.err.print(".");
-					// measure each 
+					// measure IOs
+					BTree_IO_insert[i-20].addValue(btree.getIOs());
+					ExtHash_IO_insert[i-20].addValue(exthash.getIOs());
+					LinHashV1_IO_insert[i-20].addValue(linhashV1.getIOs());
+					LinHashV2_IO_insert[i-20].addValue(linhashV1.getIOs());
+					btree.resetIOs();
+					exthash.resetIOs();
+					linhashV1.resetIOs();
+					linhashV2.resetIOs();
+					//end measure IOs
 					patron = generateChains(random, realDNA, l);
 					for(int iterations=0; iterations<10000; iterations++){
 						btree.find(patron[iterations]);
@@ -254,15 +278,33 @@ public class Main {
 						linhashV2.find(patron[iterations]);
 					}
 					System.err.print(".");
-					//measure each
+					//measure IOs
+					BTree_IO_insert[i-20].addValue(btree.getIOs());
+					ExtHash_IO_insert[i-20].addValue(exthash.getIOs());
+					LinHashV1_IO_insert[i-20].addValue(linhashV1.getIOs());
+					LinHashV2_IO_insert[i-20].addValue(linhashV1.getIOs());
+					btree.resetIOs();
+					exthash.resetIOs();
+					linhashV1.resetIOs();
+					linhashV2.resetIOs();
+					// migrate helpers => low accumulates all inserting IOs
+					bhelper_low += bhelper_high;
+					exthelper_low += exthelper_high;
+					lin1helper_low+= lin1helper_high;
+					lin2helper_low += lin2helper_high;
 				}
 				System.err.print("\nErasing >>");
 				actual = (int)Math.pow(2,L);
 				int min = 0;
+				bhelper_low = bhelper_high = 0;
+				exthelper_low = exthelper_high = 0;
+				lin1helper_low = lin1helper_high = 0;
+				lin2helper_low = lin2helper_high = 0;
 
+				// randomize erasing
 				List<String> a = Arrays.asList(realDNA);
-				Collections.shuffle(a); // randomize erasing
-				realDNA = (String)a.toArray();
+				Collections.shuffle(a); 
+				realDNA = (String[])a.toArray();
 				
 				System.gc(); // clean old realDNA
 				for(int i=L; i>l; i--){
@@ -281,13 +323,14 @@ public class Main {
 					ExtHash_OccOut[i-21].addValue(exthash.getOccupation());
 					LinHashV1_OccOut[i-21].addValue(linhashV1.getOccupation());
 					LinHashV2_OccOut[i-21].addValue(linhashV2.getOccupation());
-					//measure each
+					//measure IOs
+					BTree_IO_deleting[i-21].addValue(btree.getIOs());
+					ExtHash_IO_deleting[i-21].addValue(exthash.getIOs());
+					LinHashV1_IO_deleting[i-21].addValue(linhashV1.getOccupation());
+					LinHashV2_IO_deleting[i-21].addValue(linhashV2.getOccupation());
+					
 				}
-				btree.resetIOs();
-				exthash.resetIOs();
-				linhashV1.resetIOs();
-				linhashV2.resetIOs();
-				for(int j=actual-1; j>=0; j--){
+				for(int i=actual-1; i>=0; i--){
 					btree.delete(realDNA[i]);
 					exthash.delete(realDNA[i]);
 					linhashV1.delete(realDNA[i]);
@@ -303,11 +346,25 @@ public class Main {
 				/*	calculate error
 					if reasonable, quit
 				*/
+				
 			}
 			/* print to file */
 		}
+		
 		// test fake DNA
+		BTree_IO_erased = new SummaryStatistics(); // reset
+		ExtHash_IO_erased = new SummaryStatistics(); // reset
+		LinHashV1_IO_erased = new SummaryStatistics(); // reset
+		LinHashV2_IO_erased = new SummaryStatistics(); //reset
 		if (cmd.hasOption("fd")){
+			int bhelper_low = 0,
+				bhelper_high = 0,
+				exthelper_low = 0,
+				exthelper_high = 0,
+				lin1helper_low = 0,
+				lin1helper_high = 0,
+				lin2helper_low = 0,
+				lin2helper_high = 0;
 			for(int i=0; i<6; i++){
 				BTree_OccIn[i] = new SummaryStatistics();
 				ExtHash_OccIn[i] = new SummaryStatistics();
@@ -351,13 +408,7 @@ public class Main {
 				System.err.print(".");
 				int actual=0;
 				int max = 0;
-				System.err.print("Filling >>");
-				
-				btree.resetIOs();
-				exthash.resetIOs();
-				linhashV1.resetIOs();
-				linhashV2.resetIOs();
-
+				System.err.print("\nFilling >>");
 				for(int i=l; i<=L; i++){
 					System.err.print("2^"+i);
 					max = (int)Math.pow(2,i);
@@ -373,14 +424,22 @@ public class Main {
 					ExtHash_OccIn[i-20].addValue(exthash.getOccupation());
 					LinHashV1_OccIn[i-20].addValue(linhashV1.getOccupation());
 					LinHashV2_OccIn[i-20].addValue(linhashV2.getOccupation());
+					//measure IO
+					bhelper_high = btree.getIOs();
+					exthelper_high = exthash.getIOs();
+					lin1helper_high = linhashV1.getIOs();
+					lin2helper_high = linhashV1.getIOs();
+					BTree_IO_insert[i-20].addValue(bhelper_high + bhelper_low);
+					ExtHash_IO_insert[i-20].addValue(exthelper_high + exthelper_low);
+					LinHashV1_IO_insert[i-20].addValue(lin1helper_high + lin1helper_low);
+					LinHashV2_IO_insert[i-20].addValue(lin2helper_high + lin2helper_low);
+					btree.resetIOs();
+					exthash.resetIOs();
+					linhashV1.resetIOs();
+					linhashV2.resetIOs();
+					//end measure IO
 					actual = max;
 					String [] patron = generateChains(extracted, fakeDNA, l);
-
-
-					btree.resetIOs();
-					exthash.resetIOs();
-					linhashV1.resetIOs();
-					linhashV2.resetIOs();
 					for(int iterations=0; iterations<10000; iterations++){
 						btree.find(patron[iterations]);
 						exthash.find(patron[iterations]);
@@ -388,14 +447,17 @@ public class Main {
 						linhashV2.find(patron[iterations]);
 					}
 					System.err.print(".");
-					// measure each 
+					// measure IOs
+					BTree_IO_insert[i-20].addValue(btree.getIOs());
+					ExtHash_IO_insert[i-20].addValue(exthash.getIOs());
+					LinHashV1_IO_insert[i-20].addValue(linhashV1.getIOs());
+					LinHashV2_IO_insert[i-20].addValue(linhashV1.getIOs());
+					btree.resetIOs();
+					exthash.resetIOs();
+					linhashV1.resetIOs();
+					linhashV2.resetIOs();
+					//end measure IOs
 					patron = generateChains(random, fakeDNA, l);
-
-
-					btree.resetIOs();
-					exthash.resetIOs();
-					linhashV1.resetIOs();
-					linhashV2.resetIOs();
 					for(int iterations=0; iterations<10000; iterations++){
 						btree.find(patron[iterations]);
 						exthash.find(patron[iterations]);
@@ -403,45 +465,59 @@ public class Main {
 						linhashV2.find(patron[iterations]);
 					}
 					System.err.print(".");
-					//measure each
+					//measure IOs
+					BTree_IO_insert[i-20].addValue(btree.getIOs());
+					ExtHash_IO_insert[i-20].addValue(exthash.getIOs());
+					LinHashV1_IO_insert[i-20].addValue(linhashV1.getIOs());
+					LinHashV2_IO_insert[i-20].addValue(linhashV1.getIOs());
+					btree.resetIOs();
+					exthash.resetIOs();
+					linhashV1.resetIOs();
+					linhashV2.resetIOs();
+					// migrate helpers => low accumulates all inserting IOs
+					bhelper_low += bhelper_high;
+					exthelper_low += exthelper_high;
+					lin1helper_low+= lin1helper_high;
+					lin2helper_low += lin2helper_high;
 				}
 				System.err.print("\nErasing >>");
 				actual = (int)Math.pow(2,L);
 				int min = 0;
+				bhelper_low = bhelper_high = 0;
+				exthelper_low = exthelper_high = 0;
+				lin1helper_low = lin1helper_high = 0;
+				lin2helper_low = lin2helper_high = 0;
 
+				// randomize erasing
 				List<String> a = Arrays.asList(fakeDNA);
-				Collections.shuffle(a); // randomize erasing
-				fakeDNA = (String)a.toArray();
+				Collections.shuffle(a); 
+				fakeDNA = (String[])a.toArray();
 				
 				System.gc(); // clean old realDNA
 				for(int i=L; i>l; i--){
 					System.err.print("2^"+i+"->2^"+(i-1)+" >> ");
 					min = (int)Math.pow(2,i-1);
-
-					btree.resetIOs();
-					exthash.resetIOs();
-					linhashV1.resetIOs();
-					linhashV2.resetIOs();
 					for(int j=actual-1; j>=min; j--){
 						btree.delete(fakeDNA[i]);
 						exthash.delete(fakeDNA[i]);
 						linhashV1.delete(fakeDNA[i]);
 						linhashV2.delete(fakeDNA[i]);
 					}
+					System.err.print(".");
+					actual = min;
 					// measure Occupation
 					BTree_OccOut[i-21].addValue(btree.getOccupation());
 					ExtHash_OccOut[i-21].addValue(exthash.getOccupation());
 					LinHashV1_OccOut[i-21].addValue(linhashV1.getOccupation());
 					LinHashV2_OccOut[i-21].addValue(linhashV2.getOccupation());
-					System.err.print(".");
-					actual = min;
-					//measure each
+					//measure IOs
+					BTree_IO_deleting[i-21].addValue(btree.getIOs());
+					ExtHash_IO_deleting[i-21].addValue(exthash.getIOs());
+					LinHashV1_IO_deleting[i-21].addValue(linhashV1.getOccupation());
+					LinHashV2_IO_deleting[i-21].addValue(linhashV2.getOccupation());
+					
 				}
-				btree.resetIOs();
-				exthash.resetIOs();
-				linhashV1.resetIOs();
-				linhashV2.resetIOs();
-				for(int j=actual-1; j>=0; j--){
+				for(int i=actual-1; i>=0; i--){
 					btree.delete(fakeDNA[i]);
 					exthash.delete(fakeDNA[i]);
 					linhashV1.delete(fakeDNA[i]);

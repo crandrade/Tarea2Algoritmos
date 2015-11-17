@@ -3,14 +3,12 @@ package Tarea2Algoritmos;
 import java.io.IOException;
 import java.util.LinkedList;
 
-public class LinearHashV2 implements DiskMemoryManager {
+import org.apache.commons.math3.ode.ExpandableStatefulODE;
+
+public class LinearHashV2 extends LinearHash implements DiskMemoryManager {
 	
-	private DiskSimulator dSimulator;
-	
-	private LinkedList<Bucket> buckets;
-	
-	private int nBucketsReales = 1;
-	private int s2BucketsVirtuales = 2;
+	private long averageQueryTime = 0;
+	private long numberOfQueries = 0;
 	
 	public LinearHashV2() {
 		try {
@@ -23,28 +21,28 @@ public class LinearHashV2 implements DiskMemoryManager {
 	}
 	
 	
-	private void expand() {
-		/* Expandir */
-	}
-	
-	private void compress() {
-		/* Compress */
-	}
-	
-	private Bucket getBucket(String chain) {
-		int toInsert;
-		if (ADNHasher.longHash(chain) % (s2BucketsVirtuales/2) < nBucketsReales % (s2BucketsVirtuales/2))
-			toInsert = (int) (ADNHasher.longHash(chain) % s2BucketsVirtuales);
-		else
-			toInsert = (int) (ADNHasher.longHash(chain) % (s2BucketsVirtuales/2));
-		Bucket bToInsert = buckets.get(toInsert);
-		return bToInsert;
-	}
-	
 	@Override
 	public String find(String chain) {
+		long initTime = System.nanoTime();
 		Bucket bToSearch = getBucket(chain);
-		return bToSearch.searchInBucket(chain);
+		String toReturn = bToSearch.searchInBucket(chain);
+		if (toReturn != null) {
+			long finalTime = System.nanoTime();
+			long diffTime = finalTime - initTime;
+			System.out.println("Me demore en buscar: " + diffTime);
+			numberOfQueries++;
+			averageQueryTime = (averageQueryTime * (numberOfQueries - 1) + diffTime) / numberOfQueries;
+			checkMaybeExpandOrCompress();
+		}
+		return toReturn;
+	}
+	
+	private void checkMaybeExpandOrCompress() {
+		if (averageQueryTime > 15000) {
+			expand();
+		} else if (averageQueryTime < 10000){
+			compress();
+		}
 	}
 
 	@Override

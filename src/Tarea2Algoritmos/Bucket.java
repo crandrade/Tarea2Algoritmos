@@ -23,7 +23,7 @@ public class Bucket {
 				int counter = 0;
 				while (counter < haystack.length() - Utilitarian.CHAIN_SIZE) {
 					String mSubString = haystack.substring(counter, counter + Utilitarian.CHAIN_SIZE);
-					System.out.println("Expanding: " + mSubString);
+					//System.out.println("Expanding: " + mSubString);
 					if (mSubString.trim().equals("")) {
 						break;
 					}
@@ -35,6 +35,7 @@ public class Bucket {
 				System.out.println("Error al leer todas las cadenas del bucket");
 			}
 		}
+		
 		return allChains;
 	}
 	

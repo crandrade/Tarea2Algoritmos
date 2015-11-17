@@ -28,7 +28,7 @@ public class LinearHashV2 extends LinearHash implements DiskMemoryManager {
 		if (toReturn != null) {
 			long finalTime = System.nanoTime();
 			long diffTime = finalTime - initTime;
-			System.out.println("Me demore en buscar: " + diffTime);
+			//System.out.println("Me demore en buscar: " + diffTime);
 			numberOfQueries++;
 			averageQueryTime = (averageQueryTime * (numberOfQueries - 1) + diffTime) / numberOfQueries;
 			checkMaybeExpandOrCompress();

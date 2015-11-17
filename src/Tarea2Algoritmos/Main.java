@@ -531,9 +531,13 @@ public class Main {
 					max = (int)Math.pow(2,i);
 					for(int j=actual; j<max; j++){
 						btree.add(fakeDNA[j]);
+						System.out.print("1");
 						exthash.add(fakeDNA[j]);
+						System.out.print("2");
 						linhashV1.add(fakeDNA[j]);
+						System.out.print("3");
 						linhashV2.add(fakeDNA[j]);
+						System.out.print("4");
 					}
 					System.err.print(".");
 					// measure Occupation
@@ -618,9 +622,13 @@ public class Main {
 					min = (int)Math.pow(2,i-1);
 					for(int j=actual-1; j>=min; j--){
 						btree.delete(fakeDNA[i]);
+						System.out.print("D1");
 						exthash.delete(fakeDNA[i]);
+						System.out.print("D2");
 						linhashV1.delete(fakeDNA[i]);
+						System.out.print("D3");
 						linhashV2.delete(fakeDNA[i]);
+						System.out.print("D4");
 					}
 					System.err.print(".");
 					actual = min;

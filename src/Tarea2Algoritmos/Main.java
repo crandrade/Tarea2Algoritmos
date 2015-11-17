@@ -124,12 +124,12 @@ public class Main {
 			max_it=nn;
 		}
 		if (cmd.hasOption("i")) {
-			int nn = Integer.parseInt(cmd.getOptionValue(iter.getOpt()));
+			int nn = Integer.parseInt(cmd.getOptionValue(power.getOpt()));
 			if(nn>=10 && nn<=25)
 			l=nn;
 		}
 		if (cmd.hasOption("I")) {
-			int nn = Integer.parseInt(cmd.getOptionValue(iter.getOpt()));
+			int nn = Integer.parseInt(cmd.getOptionValue(power2.getOpt()));
 			if(nn>=l && nn<=25)
 			L=nn;
 		}

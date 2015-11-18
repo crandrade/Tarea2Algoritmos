@@ -345,8 +345,8 @@ public class Main {
 						//measure IOs
 						BTree_IO_deleting[i-l-1].addValue(btree.getIOs());
 						ExtHash_IO_deleting[i-l-1].addValue(exthash.getIOs());
-						LinHashV1_IO_deleting[i-l-1].addValue(linhashV1.getOccupation());
-						LinHashV2_IO_deleting[i-l-1].addValue(linhashV2.getOccupation());
+						LinHashV1_IO_deleting[i-l-1].addValue(linhashV1.getIOs());
+						LinHashV2_IO_deleting[i-l-1].addValue(linhashV2.getIOs());
 						System.err.print(",");
 					}
 					for(int i=actual-1; i>=0; i--){
@@ -640,8 +640,8 @@ public class Main {
 					//measure IOs
 					BTree_IO_deleting[i-l-1].addValue(btree.getIOs());
 					ExtHash_IO_deleting[i-l-1].addValue(exthash.getIOs());
-					LinHashV1_IO_deleting[i-l-1].addValue(linhashV1.getOccupation());
-					LinHashV2_IO_deleting[i-l-1].addValue(linhashV2.getOccupation());
+					LinHashV1_IO_deleting[i-l-1].addValue(linhashV1.getIOs());
+					LinHashV2_IO_deleting[i-l-1].addValue(linhashV2.getIOs());
 					System.err.print(",");
 				}
 				for(int i=actual-1; i>=0; i--){

@@ -231,7 +231,7 @@ public class Main {
 					System.err.print(".");
 					DiskMemoryManager linhashV1 = new LinearHashV1();
 					System.err.print(".");
-					DiskMemoryManager linhashV2 = new LinearHashV2();
+					DiskMemoryManager linhashV2 = new DummyBTree();
 					System.err.print(".");
 					int actual=0;
 					int max = 0;
@@ -526,7 +526,7 @@ public class Main {
 				System.err.print(".");
 				DiskMemoryManager linhashV1 = new LinearHashV1();
 				System.err.print(".");
-				DiskMemoryManager linhashV2 = new LinearHashV2();
+				DiskMemoryManager linhashV2 = new DummyBTree();
 				System.err.print(".");
 				int actual=0;
 				int max = 0;

@@ -229,9 +229,9 @@ public class Main {
 					System.err.print(".");
 					DiskMemoryManager exthash = new ExtendibleHash();
 					System.err.print(".");
-					DiskMemoryManager linhashV1 = new DummyBTree();
+					DiskMemoryManager linhashV1 = new LinearHashV1();
 					System.err.print(".");
-					DiskMemoryManager linhashV2 = new DummyBTree();
+					DiskMemoryManager linhashV2 = new LinearHashV2();
 					System.err.print(".");
 					int actual=0;
 					int max = 0;
@@ -332,8 +332,8 @@ public class Main {
 						for(int j=actual-1; j>=min; j--){
 							btree.delete(realDNA[i]);
 							exthash.delete(realDNA[i]);
-							linhashV1.delete(realDNA[i]);
-							linhashV2.delete(realDNA[i]);
+							//linhashV1.delete(realDNA[i]);
+							//linhashV2.delete(realDNA[i]);
 						}
 						System.err.print(".");
 						actual = min;
@@ -352,8 +352,8 @@ public class Main {
 					for(int i=actual-1; i>=0; i--){
 						btree.delete(realDNA[i]);
 						exthash.delete(realDNA[i]);
-						linhashV1.delete(realDNA[i]);
-						linhashV2.delete(realDNA[i]);
+						//linhashV1.delete(realDNA[i]);
+						//linhashV2.delete(realDNA[i]);
 					}
 					//measure
 					BTree_IO_erased.addValue(btree.getIOs());
@@ -526,7 +526,7 @@ public class Main {
 				System.err.print(".");
 				DiskMemoryManager linhashV1 = new LinearHashV1();
 				System.err.print(".");
-				DiskMemoryManager linhashV2 = new DummyBTree();
+				DiskMemoryManager linhashV2 = new LinearHashV2();
 				System.err.print(".");
 				int actual=0;
 				int max = 0;
@@ -627,8 +627,8 @@ public class Main {
 					for(int j=actual-1; j>=min; j--){
 						btree.delete(fakeDNA[i]);
 						exthash.delete(fakeDNA[i]);
-						linhashV1.delete(fakeDNA[i]);
-						linhashV2.delete(fakeDNA[i]);
+						//linhashV1.delete(fakeDNA[i]);
+						//linhashV2.delete(fakeDNA[i]);
 					}
 					System.err.print(".");
 					actual = min;
@@ -647,8 +647,8 @@ public class Main {
 				for(int i=actual-1; i>=0; i--){
 					btree.delete(fakeDNA[i]);
 					exthash.delete(fakeDNA[i]);
-					linhashV1.delete(fakeDNA[i]);
-					linhashV2.delete(fakeDNA[i]);
+					//linhashV1.delete(fakeDNA[i]);
+					//linhashV2.delete(fakeDNA[i]);
 				}
 				//measure
 				BTree_IO_erased.addValue(btree.getIOs());

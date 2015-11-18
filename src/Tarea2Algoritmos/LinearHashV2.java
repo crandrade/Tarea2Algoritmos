@@ -37,8 +37,8 @@ public class LinearHashV2 extends LinearHash implements DiskMemoryManager {
 	}
 	
 	private void checkMaybeExpandOrCompress() {
-		System.out.print("*" + averageQueryTime + "*");
-		if (averageQueryTime > 32000) {
+		//System.out.print("*" + averageQueryTime + "*");
+		if (averageQueryTime > 32000000) {
 			expand();
 		} else if (averageQueryTime < 20000){
 			compress();

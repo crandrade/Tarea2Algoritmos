@@ -231,7 +231,7 @@ public class Main {
 					System.err.print(".");
 					DiskMemoryManager linhashV1 = new LinearHashV1();
 					System.err.print(".");
-					DiskMemoryManager linhashV2 = new LinearHashV2();
+					DiskMemoryManager linhashV2 = new DummyBTree();
 					System.err.print(".");
 					int actual=0;
 					int max = 0;
@@ -241,13 +241,9 @@ public class Main {
 						max = (int)Math.pow(2,i);
 						for(int j=actual; j<max; j++){
 							btree.add(realDNA[j]);
-							System.out.print("1");
 							exthash.add(realDNA[j]);
-							System.out.print("2");
 							linhashV1.add(realDNA[j]);
-							System.out.print("3");
 							linhashV2.add(realDNA[j]);
-							System.out.print("4");
 						}
 						System.err.print(".");
 						// measure Occupation
@@ -255,7 +251,6 @@ public class Main {
 						ExtHash_OccIn[i-l].addValue(exthash.getOccupation());
 						LinHashV1_OccIn[i-l].addValue(linhashV1.getOccupation());
 						LinHashV2_OccIn[i-l].addValue(linhashV2.getOccupation());
-						System.out.println("Finished ocupation");
 						//measure IO
 						bhelper_high = btree.getIOs();
 						exthelper_high = exthash.getIOs();
@@ -269,20 +264,16 @@ public class Main {
 						exthash.resetIOs();
 						linhashV1.resetIOs();
 						linhashV2.resetIOs();
-						System.out.println("Finish IO");
+						System.err.print(",");
 						//end measure IO
 						actual = max;
 						//find successful
 						String [] patron = generateChains(extracted, realDNA, l);
 						for(int iterations=0; iterations<10000; iterations++){
 							btree.find(patron[iterations]);
-							System.out.print("F1");
 							exthash.find(patron[iterations]);
-							System.out.print("F2");
 							linhashV1.find(patron[iterations]);
-							System.out.print("F3");
 							linhashV2.find(patron[iterations]);
-							System.out.print("F4");
 						}
 						System.err.print(".");
 						// measure IOs
@@ -294,6 +285,7 @@ public class Main {
 						exthash.resetIOs();
 						linhashV1.resetIOs();
 						linhashV2.resetIOs();
+						System.err.print("m");
 						//end measure IOs
 						//find unfavorable
 						patron = generateChains(random, realDNA, l);
@@ -313,6 +305,7 @@ public class Main {
 						exthash.resetIOs();
 						linhashV1.resetIOs();
 						linhashV2.resetIOs();
+						System.err.print(",");
 						// migrate helpers => low accumulates all inserting IOs
 						bhelper_low += bhelper_high;
 						exthelper_low += exthelper_high;
@@ -338,13 +331,9 @@ public class Main {
 						min = (int)Math.pow(2,i-1);
 						for(int j=actual-1; j>=min; j--){
 							btree.delete(realDNA[i]);
-							System.out.print("D1");
 							exthash.delete(realDNA[i]);
-							System.out.print("D2");
 							linhashV1.delete(realDNA[i]);
-							System.out.print("D3");
 							linhashV2.delete(realDNA[i]);
-							System.out.print("D4");
 						}
 						System.err.print(".");
 						actual = min;
@@ -358,7 +347,7 @@ public class Main {
 						ExtHash_IO_deleting[i-l-1].addValue(exthash.getIOs());
 						LinHashV1_IO_deleting[i-l-1].addValue(linhashV1.getOccupation());
 						LinHashV2_IO_deleting[i-l-1].addValue(linhashV2.getOccupation());
-						
+						System.err.print(",");
 					}
 					for(int i=actual-1; i>=0; i--){
 						btree.delete(realDNA[i]);
@@ -537,7 +526,7 @@ public class Main {
 				System.err.print(".");
 				DiskMemoryManager linhashV1 = new LinearHashV1();
 				System.err.print(".");
-				DiskMemoryManager linhashV2 = new LinearHashV2();
+				DiskMemoryManager linhashV2 = new DummyBTree();
 				System.err.print(".");
 				int actual=0;
 				int max = 0;
@@ -547,13 +536,9 @@ public class Main {
 					max = (int)Math.pow(2,i);
 					for(int j=actual; j<max; j++){
 						btree.add(fakeDNA[j]);
-						System.out.print("1");
 						exthash.add(fakeDNA[j]);
-						System.out.print("2");
 						linhashV1.add(fakeDNA[j]);
-						System.out.print("3");
 						linhashV2.add(fakeDNA[j]);
-						System.out.print("4");
 					}
 					System.err.print(".");
 					// measure Occupation
@@ -561,7 +546,6 @@ public class Main {
 					ExtHash_OccIn[i-l].addValue(exthash.getOccupation());
 					LinHashV1_OccIn[i-l].addValue(linhashV1.getOccupation());
 					LinHashV2_OccIn[i-l].addValue(linhashV2.getOccupation());
-					System.out.println("Finished ocupation");
 					//measure IO
 					bhelper_high = btree.getIOs();
 					exthelper_high = exthash.getIOs();
@@ -575,20 +559,16 @@ public class Main {
 					exthash.resetIOs();
 					linhashV1.resetIOs();
 					linhashV2.resetIOs();
-					System.out.println("Finish IO");
+					System.err.print(",");
 					//end measure IO
 					actual = max;
 					//find successful
 					String [] patron = generateChains(extracted, fakeDNA, l);
 					for(int iterations=0; iterations<10000; iterations++){
 						btree.find(patron[iterations]);
-						System.out.print("F1");
 						exthash.find(patron[iterations]);
-						System.out.print("F2");
 						linhashV1.find(patron[iterations]);
-						System.out.print("F3");
 						linhashV2.find(patron[iterations]);
-						System.out.print("F4");
 					}
 					System.err.print(".");
 					// measure IOs
@@ -600,18 +580,15 @@ public class Main {
 					exthash.resetIOs();
 					linhashV1.resetIOs();
 					linhashV2.resetIOs();
+					System.err.print(",");
 					//end measure IOs
 					//find unfavorable
 					patron = generateChains(random, fakeDNA, l);
 					for(int iterations=0; iterations<10000; iterations++){
 						btree.find(patron[iterations]);
-						System.out.print("NF1");
 						exthash.find(patron[iterations]);
-						System.out.print("NF2");
 						linhashV1.find(patron[iterations]);
-						System.out.print("NF3");
 						linhashV2.find(patron[iterations]);
-						System.out.print("NF4");
 					}
 					System.err.print(".");
 					//measure IOs
@@ -628,6 +605,7 @@ public class Main {
 					exthelper_low += exthelper_high;
 					lin1helper_low+= lin1helper_high;
 					lin2helper_low += lin2helper_high;
+					System.err.print(",");
 				}
 				System.err.print("\nErasing >>");
 				actual = (int)Math.pow(2,L);
@@ -648,13 +626,9 @@ public class Main {
 					min = (int)Math.pow(2,i-1);
 					for(int j=actual-1; j>=min; j--){
 						btree.delete(fakeDNA[i]);
-						System.out.print("D1");
 						exthash.delete(fakeDNA[i]);
-						System.out.print("D2");
 						linhashV1.delete(fakeDNA[i]);
-						System.out.print("D3");
 						linhashV2.delete(fakeDNA[i]);
-						System.out.print("D4");
 					}
 					System.err.print(".");
 					actual = min;
@@ -668,7 +642,7 @@ public class Main {
 					ExtHash_IO_deleting[i-l-1].addValue(exthash.getIOs());
 					LinHashV1_IO_deleting[i-l-1].addValue(linhashV1.getOccupation());
 					LinHashV2_IO_deleting[i-l-1].addValue(linhashV2.getOccupation());
-					
+					System.err.print(",");
 				}
 				for(int i=actual-1; i>=0; i--){
 					btree.delete(fakeDNA[i]);
@@ -681,6 +655,7 @@ public class Main {
 				ExtHash_IO_erased.addValue(exthash.getIOs());
 				LinHashV1_IO_erased.addValue(linhashV1.getIOs());
 				LinHashV2_IO_erased.addValue(linhashV2.getIOs());
+				System.err.print(",");
 				//end
 				destroy(fakeDNA);
 				/*	calculate error

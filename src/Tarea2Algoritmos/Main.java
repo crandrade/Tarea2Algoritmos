@@ -229,7 +229,7 @@ public class Main {
 					System.err.print(".");
 					DiskMemoryManager exthash = new ExtendibleHash();
 					System.err.print(".");
-					DiskMemoryManager linhashV1 = new LinearHashV1();
+					DiskMemoryManager linhashV1 = new DummyBTree();
 					System.err.print(".");
 					DiskMemoryManager linhashV2 = new DummyBTree();
 					System.err.print(".");

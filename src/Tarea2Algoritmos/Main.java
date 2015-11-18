@@ -225,7 +225,7 @@ public class Main {
 					System.err.print("Setting up Real DNA test "+r);
 					realDNA = init("realDNA"+r+".txt", L);
 					System.err.print(".");
-					DiskMemoryManager btree = new DummyBTree();
+					DiskMemoryManager btree = new BTree();
 					System.err.print(".");
 					DiskMemoryManager exthash = new ExtendibleHash();
 					System.err.print(".");
@@ -531,7 +531,7 @@ public class Main {
 				System.err.print("Setting up Fake DNA test "+r);
 				fakeDNA = init("fakeDNA"+r+".txt", L);
 				System.err.print(".");
-				DiskMemoryManager btree = new DummyBTree();
+				DiskMemoryManager btree = new BTree();
 				System.err.print(".");
 				DiskMemoryManager exthash = new ExtendibleHash();
 				System.err.print(".");
@@ -605,9 +605,13 @@ public class Main {
 					patron = generateChains(random, fakeDNA, l);
 					for(int iterations=0; iterations<10000; iterations++){
 						btree.find(patron[iterations]);
+						System.out.print("NF1");
 						exthash.find(patron[iterations]);
+						System.out.print("NF2");
 						linhashV1.find(patron[iterations]);
+						System.out.print("NF3");
 						linhashV2.find(patron[iterations]);
+						System.out.print("NF4");
 					}
 					System.err.print(".");
 					//measure IOs

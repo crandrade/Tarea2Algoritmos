@@ -255,7 +255,7 @@ public class Main {
 						bhelper_high = btree.getIOs();
 						exthelper_high = exthash.getIOs();
 						lin1helper_high = linhashV1.getIOs();
-						lin2helper_high = linhashV1.getIOs();
+						lin2helper_high = linhashV2.getIOs();
 						BTree_IO_insert[i-l].addValue(bhelper_high + bhelper_low);
 						ExtHash_IO_insert[i-l].addValue(exthelper_high + exthelper_low);
 						LinHashV1_IO_insert[i-l].addValue(lin1helper_high + lin1helper_low);
@@ -280,7 +280,7 @@ public class Main {
 						BTree_IO_successfulSearch[i-l].addValue(btree.getIOs());
 						ExtHash_IO_successfulSearch[i-l].addValue(exthash.getIOs());
 						LinHashV1_IO_successfulSearch[i-l].addValue(linhashV1.getIOs());
-						LinHashV2_IO_successfulSearch[i-l].addValue(linhashV1.getIOs());
+						LinHashV2_IO_successfulSearch[i-l].addValue(linhashV2.getIOs());
 						btree.resetIOs();
 						exthash.resetIOs();
 						linhashV1.resetIOs();
@@ -300,7 +300,7 @@ public class Main {
 						BTree_IO_unfavorableSearch[i-l].addValue(btree.getIOs());
 						ExtHash_IO_unfavorableSearch[i-l].addValue(exthash.getIOs());
 						LinHashV1_IO_unfavorableSearch[i-l].addValue(linhashV1.getIOs());
-						LinHashV2_IO_unfavorableSearch[i-l].addValue(linhashV1.getIOs());
+						LinHashV2_IO_unfavorableSearch[i-l].addValue(linhashV2.getIOs());
 						btree.resetIOs();
 						exthash.resetIOs();
 						linhashV1.resetIOs();
@@ -550,7 +550,7 @@ public class Main {
 					bhelper_high = btree.getIOs();
 					exthelper_high = exthash.getIOs();
 					lin1helper_high = linhashV1.getIOs();
-					lin2helper_high = linhashV1.getIOs();
+					lin2helper_high = linhashV2.getIOs();
 					BTree_IO_insert[i-l].addValue(bhelper_high + bhelper_low);
 					ExtHash_IO_insert[i-l].addValue(exthelper_high + exthelper_low);
 					LinHashV1_IO_insert[i-l].addValue(lin1helper_high + lin1helper_low);
@@ -575,7 +575,7 @@ public class Main {
 					BTree_IO_successfulSearch[i-l].addValue(btree.getIOs());
 					ExtHash_IO_successfulSearch[i-l].addValue(exthash.getIOs());
 					LinHashV1_IO_successfulSearch[i-l].addValue(linhashV1.getIOs());
-					LinHashV2_IO_successfulSearch[i-l].addValue(linhashV1.getIOs());
+					LinHashV2_IO_successfulSearch[i-l].addValue(linhashV2.getIOs());
 					btree.resetIOs();
 					exthash.resetIOs();
 					linhashV1.resetIOs();
@@ -595,7 +595,7 @@ public class Main {
 					BTree_IO_unfavorableSearch[i-l].addValue(btree.getIOs());
 					ExtHash_IO_unfavorableSearch[i-l].addValue(exthash.getIOs());
 					LinHashV1_IO_unfavorableSearch[i-l].addValue(linhashV1.getIOs());
-					LinHashV2_IO_unfavorableSearch[i-l].addValue(linhashV1.getIOs());
+					LinHashV2_IO_unfavorableSearch[i-l].addValue(linhashV2.getIOs());
 					btree.resetIOs();
 					exthash.resetIOs();
 					linhashV1.resetIOs();
